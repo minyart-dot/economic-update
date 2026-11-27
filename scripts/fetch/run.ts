@@ -13,6 +13,8 @@ import { computeFredMetric, computeYtd, fredClient, fredIds, fredSeriesUrl, FRED
 import { redact, type HttpOptions } from "./http";
 import { computeOnsMetric, fetchOns, ONS_METRICS } from "./ons";
 import { fetchPayrolls, PAYROLLS_METRIC } from "./payrolls";
+import { fetchKastle, KASTLE_SOURCE_URL, kastleRefDate } from "./kastle";
+import { defaultNyfedUrl, expectedQuarter, fetchNyfed, nyfedReportUrl } from "./nyfed";
 import type { AutoFile, AutoRecord, Computed, Obs, SaveRaw } from "./types";
 
 export interface RunOptions {
@@ -146,6 +148,16 @@ export async function runFetch(o: RunOptions): Promise<AutoFile> {
     // --- ONS (uk_unemployment, series MGSX) ---
     if (id in ONS_METRICS) return async () => toRecord(computeOnsMetric(await fetchOns(id, o.http, saveRaw)), ONS_METRICS[id].sourceUrl);
     // --- end ONS ---
+    // ---- Kastle + NY Fed (SEMI, best effort): any doubt throws -> stale record -> manual template.
+    if (id === "office_occupancy_kastle") {
+      const url = env.KASTLE_URL || KASTLE_SOURCE_URL;
+      return async () => toRecord(await fetchKastle(url, kastleRefDate(o.edition, o.now ?? new Date()), o.http, saveRaw), KASTLE_SOURCE_URL);
+    }
+    if (id === "hh_debt_delinquent") {
+      const url = env.NYFED_HHDC_URL || defaultNyfedUrl(o.edition);
+      return async () => toRecord(await fetchNyfed(url, o.edition, o.http, saveRaw), nyfedReportUrl(expectedQuarter(o.edition)));
+    }
+    // ---- end Kastle + NY Fed
     return null;
   };
 
