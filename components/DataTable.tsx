@@ -18,7 +18,7 @@ export function DataTable({
   minWidth = 640,
 }: {
   columns: Column[];
-  rows: { cells?: ReactNode[]; group?: string; groupStart?: boolean }[];
+  rows: { cells?: ReactNode[]; group?: string; groupStart?: boolean; topics?: string }[];
   caption?: string;
   minWidth?: number;
 }) {
@@ -45,7 +45,7 @@ export function DataTable({
           {rows.map((r, ri) => {
             if (r.group) {
               return (
-                <tr key={ri} className="border-t border-border bg-white">
+                <tr key={ri} className="border-t border-border bg-white" data-topics={r.topics}>
                   <th
                     scope="colgroup"
                     colSpan={columns.length}
@@ -58,7 +58,7 @@ export function DataTable({
             }
             const zebra = ri % 2 === 1 ? "bg-panel" : "bg-white";
             return (
-              <tr key={ri} className={`${zebra} ${r.groupStart && ri > 0 ? "border-t border-border" : ""}`}>
+              <tr key={ri} className={`${zebra} ${r.groupStart && ri > 0 ? "border-t border-border" : ""}`} data-topics={r.topics}>
                 {(r.cells ?? []).map((cell, ci) => (
                   <td
                     key={ci}

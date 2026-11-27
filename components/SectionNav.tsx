@@ -6,6 +6,7 @@ export interface NavItem {
   id: string;
   number: string;
   label: string;
+  topics?: string;
 }
 
 /** Sticky left rail on desktop; horizontally scrolling chip bar on mobile (spec 4.4 #15). */
@@ -36,7 +37,7 @@ export function SectionNav({ items }: { items: NavItem[] }) {
       <nav aria-label="Sections" className="no-print sticky top-0 z-30 border-b border-border bg-white/95 backdrop-blur lg:hidden">
         <ul className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-2">
           {items.map((it) => (
-            <li key={it.id} className="shrink-0">
+            <li key={it.id} className="shrink-0" data-topics={it.topics}>
               <a
                 id={`chip-${it.id}`}
                 href={`#${it.id}`}
@@ -56,7 +57,7 @@ export function SectionNav({ items }: { items: NavItem[] }) {
       <nav aria-label="Sections" className="no-print hidden lg:block">
         <ul className="sticky top-4 space-y-0.5 border-l border-border py-1">
           {items.map((it) => (
-            <li key={it.id}>
+            <li key={it.id} data-topics={it.topics}>
               <a
                 href={`#${it.id}`}
                 aria-current={active === it.id ? "location" : undefined}

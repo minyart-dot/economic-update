@@ -22,12 +22,27 @@ import { SectionNav } from "./SectionNav";
 import { SourceLink } from "./SourceLink";
 import { StatTile } from "./StatTile";
 import { SubscribeStrip } from "./SubscribeStrip";
+import { TopicFilter } from "./TopicFilter";
+import {
+  APPLY_TOPICS_SOURCE,
+  AREA_TOPICS,
+  CARD_TOPICS,
+  METRIC_TOPIC_OVERRIDES,
+  SECTION_TOPICS,
+  THEME_TOPICS,
+  inventoryRowTopic,
+} from "@/lib/topics";
 
 function Section({ id, children, hideHeader = false }: { id: string; children: ReactNode; hideHeader?: boolean }) {
   const sec = loadSections().find((s) => s.id === id);
   if (!sec) throw new Error(`Unknown section ${id}`);
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="edition-section scroll-mt-16 pt-10 first:pt-6 lg:scroll-mt-4">
+    <section
+      id={id}
+      data-topics={SECTION_TOPICS[id]}
+      aria-labelledby={`${id}-title`}
+      className="edition-section scroll-mt-16 pt-10 first:pt-6 lg:scroll-mt-4"
+    >
       {hideHeader ? (
         <h2 id={`${id}-title`} className="sr-only">
           {sec.title}
@@ -63,18 +78,28 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
   const s = ed.sections;
   const tx = loadTexasAnnual();
   const charts = buildChartData(ed);
-  const nav = loadSections().map((x) => ({ id: x.id, number: x.number || "•", label: x.nav }));
+  const nav = loadSections().map((x) => ({ id: x.id, number: x.number || "•", label: x.nav, topics: SECTION_TOPICS[x.id] }));
 
   // Key indicators: group label rows + metric rows.
-  const kiRows: { cells?: ReactNode[]; group?: string }[] = [];
+  const kiRows: { cells?: ReactNode[]; group?: string; topics?: string }[] = [];
+  const rowTopic = (r: { area: string; metric: string }) => METRIC_TOPIC_OVERRIDES[r.metric] ?? AREA_TOPICS[r.area];
   let lastArea = "";
   for (const r of ed.tables.key_indicators) {
     if (r.area !== lastArea) {
-      kiRows.push({ group: r.area });
+      const groupTopics = [
+        ...new Set(
+          ed.tables.key_indicators
+            .filter((x) => x.area === r.area)
+            .map(rowTopic)
+            .filter(Boolean),
+        ),
+      ].join(" ");
+      kiRows.push({ group: r.area, topics: groupTopics || undefined });
       lastArea = r.area;
     }
     const met = m[r.metric];
     kiRows.push({
+      topics: rowTopic(r),
       cells: [
         <SourceLink key="l" href={met.source_url} title={`${met.source_name} · as of ${met.as_of}`}>
           {r.label ?? met.label}
@@ -104,6 +129,7 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
           )}
           {/* 1 · Summary */}
           <Section id="summary" hideHeader>
+            <TopicFilter />
             <AlertBanner alert={ed.alert} variant="compact" />
             <Tiles tiles={ed.tiles.headline} metrics={m} cols={4} />
             <Callout title="The month in brief">
@@ -113,7 +139,9 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
               <H3>By investment type</H3>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {ed.asset_cards.map((c) => (
-                  <AssetCard key={c.asset} card={c} metric={m[c.metric]} />
+                  <div key={c.asset} data-topics={CARD_TOPICS[c.metric]} className="grid">
+                    <AssetCard card={c} metric={m[c.metric]} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -145,7 +173,7 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
             </Callout>
             <div className="grid gap-x-8 gap-y-6 md:grid-cols-2 [&>*]:min-w-0">
               {ed.themes.map((t, i) => (
-                <div key={t.title} className="avoid-break">
+                <div key={t.title} className="avoid-break" data-topics={THEME_TOPICS[i]}>
                   <H3>
                     {i + 1} · {t.title}
                   </H3>
@@ -239,24 +267,28 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
 
           {/* 9 · Housing, permits, manufactured homes */}
           <Section id="housing">
-            <Figure id="C7" payload={charts.C7} />
-            <TwoCol>
-              <div>
-                <H3>Building permits</H3>
-                <BulletList bullets={s.housing.permit_bullets} className="text-[14px]" />
-              </div>
-              <div>
-                <H3>Sales, prices and mortgage stress</H3>
-                <BulletList bullets={s.housing.sales_bullets} className="text-[14px]" />
-              </div>
-            </TwoCol>
-            <TwoCol>
-              <Figure id="C8" payload={charts.C8} />
-              <div className="lg:pt-7">
-                <H3>Manufactured homes</H3>
-                <BulletList bullets={s.housing.mh_bullets} className="text-[14px]" />
-              </div>
-            </TwoCol>
+            <div data-topics="houses" className="space-y-6">
+              <Figure id="C7" payload={charts.C7} />
+              <TwoCol>
+                <div>
+                  <H3>Building permits</H3>
+                  <BulletList bullets={s.housing.permit_bullets} className="text-[14px]" />
+                </div>
+                <div>
+                  <H3>Sales, prices and mortgage stress</H3>
+                  <BulletList bullets={s.housing.sales_bullets} className="text-[14px]" />
+                </div>
+              </TwoCol>
+            </div>
+            <div data-topics="mh">
+              <TwoCol>
+                <Figure id="C8" payload={charts.C8} />
+                <div className="lg:pt-7">
+                  <H3>Manufactured homes</H3>
+                  <BulletList bullets={s.housing.mh_bullets} className="text-[14px]" />
+                </div>
+              </TwoCol>
+            </div>
           </Section>
 
           {/* 10 · Months of inventory */}
@@ -275,6 +307,7 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
                 { header: "Sales y/y", numeric: true },
               ]}
               rows={ed.tables.inventory.map((r) => ({
+                topics: inventoryRowTopic(r.type),
                 cells: [
                   <SourceLink key="m" href={r.source_url} title={hostname(r.source_url)}>
                     {r.market}
@@ -324,7 +357,12 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
               ]}
               rows={ed.tables.metros.map((r) => {
                 const stats = r.history_key ? metroPermitStats(tx, r.history_key) : null;
-                const ch = computeChange(r.permits_yy_pct != null ? 1 : null, null, r.permits_yy_pct != null ? { pct: r.permits_yy_pct } : null, "count");
+                const ch = computeChange(
+                  r.permits_yy_pct != null ? 1 : null,
+                  null,
+                  r.permits_yy_pct != null ? { pct: r.permits_yy_pct } : null,
+                  "count",
+                );
                 return {
                   cells: [
                     <strong key="n">{r.metro}</strong>,
@@ -336,7 +374,12 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
                       r.permits_ytd
                     ),
                     r.permits_yy_pct != null ? (
-                      <ChangePill key="c" direction={ch.direction} color={colorFor(ch.direction, "mixed")} label={formatPctChange(r.permits_yy_pct)} />
+                      <ChangePill
+                        key="c"
+                        direction={ch.direction}
+                        color={colorFor(ch.direction, "mixed")}
+                        label={formatPctChange(r.permits_yy_pct)}
+                      />
                     ) : (
                       "—"
                     ),
@@ -432,6 +475,8 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
           </Section>
         </main>
       </div>
+      {/* Apply the reader's saved topic choice before React loads, so hidden topics don't flash. */}
+      <script dangerouslySetInnerHTML={{ __html: APPLY_TOPICS_SOURCE }} />
       <Footer editionLabel={ed.edition_label} />
     </>
   );
