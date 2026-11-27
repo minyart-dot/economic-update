@@ -45,8 +45,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         {children}
-        {/* Privacy-friendly page counts (no cookies); active only when deployed on Vercel. */}
-        <Analytics />
+        {/* Privacy-friendly page counts (no cookies). The script only exists on Vercel, so it is
+            included only in Vercel builds (Vercel sets VERCEL=1 at build time). */}
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );
