@@ -11,6 +11,8 @@ import { APARTMENTLIST_SOURCE_URL, computeRent, defaultApartmentListUrl, fetchAp
 import { computeEurostatMetric, EUROSTAT_METRICS, EUROSTAT_SOURCE_URL, fetchEurostat, type JsonStat } from "./eurostat";
 import { computeFredMetric, computeYtd, fredClient, fredIds, fredSeriesUrl, FRED_METRO_PERMITS } from "./fred";
 import { redact, type HttpOptions } from "./http";
+import { fetchKastle, KASTLE_SOURCE_URL, kastleRefDate } from "./kastle";
+import { defaultNyfedUrl, expectedQuarter, fetchNyfed, nyfedReportUrl } from "./nyfed";
 import type { AutoFile, AutoRecord, Computed, Obs, SaveRaw } from "./types";
 
 export interface RunOptions {
@@ -139,6 +141,16 @@ export async function runFetch(o: RunOptions): Promise<AutoFile> {
     }
     if (id in EUROSTAT_METRICS) return async () => toRecord(computeEurostatMetric(await getEurostat(), id), EUROSTAT_SOURCE_URL);
     if (id in RENT_LOCATIONS) return async () => toRecord(computeRent(await rentSeries(id)), APARTMENTLIST_SOURCE_URL);
+    // ---- Kastle + NY Fed (SEMI, best effort): any doubt throws -> stale record -> manual template.
+    if (id === "office_occupancy_kastle") {
+      const url = env.KASTLE_URL || KASTLE_SOURCE_URL;
+      return async () => toRecord(await fetchKastle(url, kastleRefDate(o.edition, o.now ?? new Date()), o.http, saveRaw), KASTLE_SOURCE_URL);
+    }
+    if (id === "hh_debt_delinquent") {
+      const url = env.NYFED_HHDC_URL || defaultNyfedUrl(o.edition);
+      return async () => toRecord(await fetchNyfed(url, o.edition, o.http, saveRaw), nyfedReportUrl(expectedQuarter(o.edition)));
+    }
+    // ---- end Kastle + NY Fed
     return null;
   };
 

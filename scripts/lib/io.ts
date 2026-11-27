@@ -67,6 +67,9 @@ export interface AutoMetric {
   source_url?: string;
   stale?: boolean;
   error?: string | null;
+  /** Preformatted text from the fetcher when a number alone is not the published form ("~56%", "3.75–4.00%"). */
+  display?: string;
+  year_ago_display?: string;
 }
 
 export interface AutoFile {

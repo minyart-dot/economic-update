@@ -85,6 +85,13 @@ npm test
 - `validate` implements spec 14.3 and exits 1 on any FAIL. Allow-listed banned-word matches (the "no forecast"
   disclaimer, the VIX definition) are listed with their reason in the report. Optional per-metric `max_age_days`
   and `typical_move` in `metrics.yaml` tune the freshness and large-move warnings.
+- Kastle office occupancy (`office_occupancy_kastle`, scraped from the Back to Work Barometer page) and NY Fed
+  household debt delinquency (`hh_debt_delinquent`, read from the quarterly Household Debt and Credit data
+  workbook) are fetched on a best-effort basis by `npm run fetch`. Strict checks apply: one unambiguous figure,
+  a plausible range, and a recent week or the expected quarter. If anything looks wrong, the last value is kept
+  marked stale and the metric shows up in the manual template for you to enter (no value is ever guessed).
+  Set `KASTLE_URL` if the page moves. Set `NYFED_HHDC_URL` to the current workbook
+  link; by default it is derived as `.../householdcredit/data/xls/HHD_C_Report_<YYYY>Q<n>.xlsx`.
 
 ## AI drafting (optional)
 

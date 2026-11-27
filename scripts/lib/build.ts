@@ -89,6 +89,8 @@ const fromAuto = (a: AutoMetric): Update => ({
   year_ago_period: a.year_ago_period ?? null,
   as_of: a.as_of,
   source_url: a.source_url,
+  ...(a.display ? { display: a.display } : {}),
+  ...(a.year_ago_display ? { year_ago_display: a.year_ago_display } : {}),
 });
 
 function fromManual(m: ManualEntry): Update {

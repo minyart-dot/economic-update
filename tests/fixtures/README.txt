@@ -6,5 +6,9 @@ fred/            FRED-shaped observation responses. Anchor observations equal th
 eurostat/        Eurostat JSON-stat 2.0 response shape for dataset une_rt_m, made-up values.
 apartmentlist/   Apartment List rent-estimates CSV layout, made-up values chosen to match the
                  November 2026 edition's metro rents and y/y changes.
+kastle/          Made-up HTML page in the shape the Kastle barometer parser expects (value chosen to
+                 match the November 2026 edition's "~56%"). The NY Fed workbook used by the tests is
+                 generated inside tests/fetch/kastle-nyfed.test.ts (made-up values; 4.96 / 4.48 match
+                 the November 2026 edition).
 
 Never copy these values into data/editions/, data/history/ or data/config/.

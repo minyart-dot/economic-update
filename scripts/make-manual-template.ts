@@ -2,7 +2,7 @@
 //
 //   npm run manual-template -- 2026-12
 //
-// One entry per MANUAL/SEMI metric in data/config/metrics.yaml, plus AUTO metrics that came back stale in
+// One entry per MANUAL metric in data/config/metrics.yaml, plus SEMI/AUTO metrics without a fresh value in
 // data/raw/YYYY-MM/auto.json, pre-filled from the previous edition with stale: true.
 // Never overwrites an existing file.
 
