@@ -35,6 +35,8 @@ export interface MetricConfig {
   source_name: string;
   source_url: string;
   max_age_days?: number;
+  /** Optional typical edition-to-edition move; the validator warns on a change over 3× this. */
+  typical_move?: number;
 }
 
 export interface MetricsFile {
@@ -62,8 +64,33 @@ export interface ReportedChange {
   approx?: boolean;
 }
 
-/** Metric values as stored in data/editions/YYYY-MM.json (no computed fields). */
-export interface MetricSeed {
+/** Computed fields frozen into the edition snapshot by scripts/build-edition.ts, plus pipeline flags. */
+export interface FrozenMetricFields {
+  id?: string;
+  label?: string;
+  unit?: Unit;
+  change_abs?: number | null;
+  change_pct?: number | null;
+  direction?: Direction | null;
+  polarity?: Polarity;
+  color?: ChangeColor | null;
+  comparison_basis?: string;
+  automation?: Automation;
+  frequency?: Frequency;
+  /** Not refreshed this month (not required); kept from the previous edition with its original as_of. */
+  stale?: boolean;
+  /** The owner carried the previous value forward (spec 11.2); as_of stays the original date. */
+  carried_forward?: boolean;
+  carry_forward_reason?: string;
+}
+
+/**
+ * Metric values as stored in data/editions/YYYY-MM.json. Hand-made seeds (2026-11) hold inputs only;
+ * editions written by scripts/build-edition.ts also carry the frozen computed fields (spec 10.2).
+ * lib/edition.ts always recomputes the computed fields from the inputs (never trusts the frozen copy);
+ * scripts/validate-edition.ts fails an edition whose frozen fields disagree with that recomputation.
+ */
+export interface MetricSeed extends FrozenMetricFields {
   value: number | null;
   display?: string;
   period: string;
@@ -198,9 +225,20 @@ export interface EditionSeed {
     release_calendar: { date: string; release: string }[];
   };
   themes: Theme[];
+  /** Written by scripts/build-edition.ts: provenance and the list of text to review. */
+  build?: BuildInfo;
   // Free-form per-section content (bullet groups, chart values).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sections: Record<string, any>;
+}
+
+export interface BuildInfo {
+  built_at: string;
+  previous_edition: string | null;
+  auto_generated_at: string | null;
+  manual_file: string | null;
+  draft_mode: boolean;
+  needs_review: string[];
 }
 
 export interface Correlation {
