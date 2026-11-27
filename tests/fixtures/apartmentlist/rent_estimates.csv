@@ -1,0 +1,7 @@
+location_name,location_type,location_fips_code,population,state,county,metro,2025_09,2025_10,2026_09,2026_10
+United States,National,00000,331000000,,,,1386,1383,1389,1384
+"Dallas, TX",Metro,19100,8100000,Texas,,"Dallas, TX",1435,1432,1418,1413
+"Houston, TX",Metro,26420,7500000,Texas,,"Houston, TX",1360,1356,1334,1330
+"Austin, TX",Metro,12420,2500000,Texas,,"Austin, TX",1318,1312,1299,1296
+"San Antonio, TX",Metro,41700,2700000,Texas,,"San Antonio, TX",1190,1185,1143,1140
+Dallas,City,4819000,1300000,Texas,Dallas County,"Dallas, TX",9999,9999,9999,9999

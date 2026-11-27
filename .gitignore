@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Claude Code agent worktrees
 /.claude/
+
+# raw API pulls (audit trail, spec 12.1)
+/data/raw/
