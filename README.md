@@ -173,7 +173,7 @@ hand and pick the month).
    checklist of every manual field (label, source link, expected release timing) and the validation report. GitHub
    emails you about it. Running the workflow again updates the same PR; your edits on the branch are kept.
 3. For each unticked field, click the source link, update the value and as-of date in `data/manual/YYYY-MM.yaml`,
-   and set `stale: false`. GitHub's web editor is fine. Each save rebuilds the edition and refreshes the validation
+   and set `stale: false`. GitHub's web editor is fine, or use the [admin form](#admin-form) at `/admin`. Each save rebuilds the edition and refreshes the validation
    comment on the PR. (The build reports a failure until every required field is updated or set to
    `carry_forward: true` with a reason; the PR is opened anyway.) Edit the text in `data/editions/YYYY-MM.json`
    for accuracy and neutrality; saving only that file re-validates without rebuilding, so your text is kept.
@@ -192,6 +192,66 @@ key releases are out (jobs, CPI, permits, builder confidence, existing-home sale
 25th data pull for review.
 
 Preview any month's email locally: `npm run newsletter -- 2026-11 --preview` writes `out/newsletter-2026-11.html`.
+
+## Admin form
+
+`/admin` is a password-protected page where you fill in the monthly hand-entered numbers instead of editing
+`data/manual/YYYY-MM.yaml` on GitHub. It reads the file from the `edition/YYYY-MM` branch and saves it back there
+through the GitHub API, so each save is a normal commit that re-runs the monthly workflow (rebuild, validation,
+refreshed PR comment), exactly like an edit in GitHub's web editor.
+
+### Setup (one time, about 10 minutes)
+
+1. Create a fine-grained GitHub token: GitHub > Settings > Developer settings > Personal access tokens >
+   Fine-grained tokens > Generate new token.
+   - Repository access: **Only select repositories** > this repository.
+   - Permissions: **Contents: Read and write**, **Pull requests: Read-only** (Metadata read-only is added
+     automatically). Nothing else.
+   - Pick an expiry (e.g. 1 year) and put a reminder in your calendar to renew it.
+2. In Vercel > Project > Settings > Environment Variables (Production), add:
+   - `ADMIN_PASSWORD`: a long password only you know.
+   - `ADMIN_SESSION_SECRET`: a random string of at least 32 characters (e.g. `openssl rand -hex 32`).
+   - `GITHUB_TOKEN`: the token from step 1.
+   - `GITHUB_REPOSITORY`: `owner/repo` of this repository.
+3. Redeploy. Open `https://<your site>/admin` and log in.
+
+Until all four variables are set, `/admin` and `/api/admin/*` answer "page not found", so the form is invisible.
+
+### The monthly flow with the form
+
+1. On the 25th the workflow opens the PR "Edition YYYY-MM: review & publish" (unchanged).
+2. Open `/admin`. It picks the newest `edition/YYYY-MM` branch (switch with the Edition menu) and lists every manual
+   field grouped by area, with the last value, a link to the source, when it is usually released, and whether it is
+   required. Fields that still need updating are marked; tick "Show only fields that still need updating" to hide
+   the rest.
+3. For each field, open the source, type the new value, the period it covers (e.g. `2026-11`, `2026-Q3`), the as-of
+   date and the year-ago value and period. The short label, as-of and year-ago period are suggested from the period.
+   The status switches to "Updated" as you type. No new release? Choose "No new release: carry forward" and say why.
+   Plain numbers only (4.1, not 4.1%). Blank inputs keep the old value until a field is marked "Updated".
+4. Press **Save changes**. Errors are shown next to the field. After a save you get links to the commit and the PR;
+   the rebuild and validation take about 3 minutes and the validation report (also shown on `/admin`) updates.
+5. If someone else (or you, in another tab or on GitHub) saved the file in the meantime, the form refuses to
+   overwrite it and asks you to reload.
+6. Then continue as usual: review the text and the Vercel preview, set `"status": "ready"`, merge.
+
+### Security
+
+- Only the server sees the password, the session secret and the GitHub token; nothing is `NEXT_PUBLIC_` and the
+  browser only receives field values, the file version (sha) and public GitHub links.
+- Login compares the password in constant time and is rate-limited (5 failed attempts per IP and 30 overall per 15
+  minutes, per server instance). The session cookie is signed (HMAC-SHA256), lasts 12 hours, and is `httpOnly`,
+  `Secure` and `SameSite=Strict`. Changing `ADMIN_PASSWORD` or `ADMIN_SESSION_SECRET` logs everyone out. Saves also
+  require a same-origin request.
+- The code can only write `data/manual/YYYY-MM.yaml` on `edition/YYYY-MM` (same month): never `main`, never another
+  file (`lib/admin/paths.ts`, tested). The token's scope (one repository, contents + read-only PRs) limits the damage
+  if it ever leaked; revoke it on GitHub if in doubt.
+- `/admin` is `noindex`, disallowed in `robots.txt` and not in the sitemap.
+- Edits change only the lines of the fields you changed, so the file's comments stay. If the file was rewritten into
+  a layout the editor does not recognise, it is saved in standard YAML layout with the header comment kept and the
+  per-entry comments dropped (the form tells you).
+
+Code: `app/admin`, `app/api/admin`, `lib/admin`, `components/admin`; tests in `tests/admin-*.test.ts` run against a
+local GitHub stand-in (`tests/github-stand-in.ts`, `GITHUB_API_BASE` points the app at it).
 
 ## PDF edition
 
