@@ -1,0 +1,104 @@
+# Between-edition market volatility alert (spec Section 9, 12.3; Phase 6, optional).
+#
+# Scheduled: weekdays at 21:30 UTC = 4:30pm Central in standard time (CST, UTC-6). Cron runs in
+# UTC, so during daylight saving time (CDT, UTC-5, March to November) this is 5:30pm Central.
+# Either way it runs after the 4:15pm CT VIX close.
+#
+# It fetches the latest VIX close (FRED VIXCLS; Cboe's daily CSV when FRED has not posted today's
+# close yet). If the close is at or above the threshold (default 30) and no alert was sent in the
+# last 5 trading days, it emails ONLY subscribers tagged "alerts" in Buttondown, then commits the
+# entry in data/alerts.json back [skip ci]. If Buttondown does not confirm the tag-only audience,
+# nothing is sent and the run fails.
+#
+# Manual: Actions > "VIX alert" > Run workflow.
+#   check     print the latest close and the decision; no Buttondown call
+#   dry-run   if the rule fires, create a Buttondown DRAFT for the alerts tag; nothing is sent
+#   send      the scheduled behavior
+#
+# Setup: repository secrets BUTTONDOWN_API_KEY and FRED_API_KEY, repository variable SITE_URL.
+# Optional repository variable VIX_ALERT_THRESHOLD.
+#
+# Committing data/alerts.json does not trigger newsletter.yml (that one watches data/editions/**
+# only), and [skip ci] skips other workflows too.
+
+name: VIX alert
+
+on:
+  schedule:
+    - cron: "30 21 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check prints the decision; dry-run creates a Buttondown draft only; send emails the alerts tag"
+        type: choice
+        options: [check, dry-run, send]
+        default: dry-run
+      threshold:
+        description: "Alert threshold (blank = VIX_ALERT_THRESHOLD variable or 30)"
+        required: false
+        default: ""
+      date:
+        description: "Evaluate the close on or before this date (YYYY-MM-DD). Blank = today (Central)."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vix-alert
+  cancel-in-progress: false
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      SITE_URL: ${{ vars.SITE_URL }}
+      MODE: ${{ github.event_name == 'schedule' && 'send' || inputs.mode }}
+      THRESHOLD: ${{ inputs.threshold || vars.VIX_ALERT_THRESHOLD || '30' }}
+      ALERT_DATE: ${{ inputs.date }}
+    steps:
+      - name: Check configuration
+        run: |
+          missing=""
+          [ -z "$BUTTONDOWN_API_KEY" ] && missing="$missing BUTTONDOWN_API_KEY"
+          [ -z "$FRED_API_KEY" ] && missing="$missing FRED_API_KEY"
+          [ -z "$SITE_URL" ] && missing="$missing SITE_URL"
+          if [ -n "$missing" ]; then
+            echo "::warning::Not configured (missing:$missing); skipping the VIX alert."
+            echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/checkout@v4
+        if: env.SKIP != '1'
+      - uses: actions/setup-node@v4
+        if: env.SKIP != '1'
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+        if: env.SKIP != '1'
+
+      - name: Evaluate and alert
+        if: env.SKIP != '1'
+        run: |
+          ARGS=(--threshold "$THRESHOLD")
+          [ "$MODE" != "check" ] && ARGS+=("--$MODE")
+          [ -n "$ALERT_DATE" ] && ARGS+=(--date "$ALERT_DATE")
+          npm run vix-alert -- "${ARGS[@]}"
+
+      # Runs even if a later part of the script failed, so a sent alert is always recorded.
+      - name: Record the alert
+        if: always() && env.SKIP != '1' && env.MODE == 'send'
+        run: |
+          if [ -n "$(git status --porcelain data/alerts.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/alerts.json
+            git commit -m "Log VIX alert [skip ci]"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

@@ -13,6 +13,8 @@ import { addDays, addMonths, clean, findYearAgo, labelOf, latestObs, monthLabel,
 import type { Computed, Obs, SaveRaw, SeriesFrequency } from "./types";
 
 export const FRED_API = "https://api.stlouisfed.org/fred/series/observations";
+/** Observations endpoint used by fredClient; FRED_API_BASE overrides it (tests use a local stand-in). */
+export const fredApiUrl = () => process.env.FRED_API_BASE || FRED_API;
 export const fredSeriesUrl = (id: string) => `https://fred.stlouisfed.org/series/${id}`;
 
 /**
@@ -76,6 +78,8 @@ export function fredClient(opts: {
   edition: string;
   http?: HttpOptions;
   saveRaw?: SaveRaw;
+  /** Observations endpoint override (default: FRED_API_BASE env, else FRED_API). */
+  apiBase?: string;
 }): SeriesGetter {
   const cache = new Map<string, Promise<Obs[]>>();
   const start = `${Number(opts.edition.slice(0, 4)) - 3}-01-01`;
@@ -95,7 +99,7 @@ export function fredClient(opts: {
           });
           let res;
           try {
-            res = await fetchJson<FredResponse>(`${FRED_API}?${q}`, opts.http);
+            res = await fetchJson<FredResponse>(`${opts.apiBase || fredApiUrl()}?${q}`, opts.http);
           } catch (e) {
             // FRED explains 400s (bad series id, bad key) in the body.
             const msg = e instanceof HttpError && e.body ? fredErrorMessage(e.body) : null;

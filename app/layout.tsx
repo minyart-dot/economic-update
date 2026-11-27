@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -9,7 +10,16 @@ const inter = Inter({
   display: "swap",
 });
 
+const siteUrl = (process.env.SITE_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")).replace(/\/$/, "");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    type: "website",
+    siteName: "State of the Market",
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
   title: {
     default: "State of the Market · Monthly Brief for Real Estate Investors",
     template: "%s · State of the Market",
@@ -35,6 +45,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         {children}
+        {/* Privacy-friendly page counts (no cookies). The script only exists on Vercel, so it is
+            included only in Vercel builds (Vercel sets VERCEL=1 at build time). */}
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );

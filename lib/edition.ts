@@ -2,11 +2,12 @@
 // scripts/build-edition.ts freezes the same computation into the edition snapshot (spec 10.2):
 // y/y changes, direction, color, polarity, comparison basis, source, as-of, plus correlations and alert.
 //
-// Frozen vs. seed editions: this loader accepts both formats and ALWAYS recomputes the computed
-// fields from the inputs (value, year_ago, change_reported, config). Frozen copies in the JSON are
-// ignored here, so a hand edit to a value can never leave a stale arrow or color on the page.
-// scripts/validate-edition.ts fails any edition whose frozen fields disagree with this recomputation,
-// so the snapshot on disk and the rendered page stay consistent.
+// Frozen vs. seed editions: drafts and "ready" editions ALWAYS recompute the computed fields from
+// the inputs (value, year_ago, change_reported, config), so a hand edit to a value can never leave a
+// stale arrow; scripts/validate-edition.ts fails any disagreement with the frozen copies before
+// publishing. Once "published", an edition is an archive: its frozen fields (when present) and its
+// history snapshot (data/editions/YYYY-MM.history.json) are used, so later config or history
+// changes never alter it (spec 17).
 
 import { buildAlert } from "./alert";
 import { computeCorrelations } from "./analytics";
@@ -17,8 +18,7 @@ import {
   loadMetricsConfig,
   loadSections,
   loadSources,
-  loadTexasAnnual,
-  loadUsAnnual,
+  historyFor,
 } from "./data";
 import { formatValue, hostname } from "./format";
 import type { Bullet, Edition, EditionSeed, Metric, MetricsFile, ReferenceGroup, SourceEntry } from "./types";
@@ -149,18 +149,41 @@ export function buildReferences(seed: EditionSeed, metrics: Record<string, Metri
 
 // --------------------------------------------------------------------------- edition
 
+const FROZEN_KEYS = ["display", "year_ago_display", "change_abs", "change_pct", "direction", "color", "polarity"] as const;
+
+/**
+ * Published editions are archives: if their JSON carries frozen computed fields (written by
+ * scripts/build-edition.ts), show those, so a later change to metrics.yaml (e.g. a polarity or
+ * flat threshold) can't alter an old page. Drafts and "ready" editions always use the fresh
+ * computation (the validator fails any disagreement before publishing).
+ */
+function applyFrozen(seed: EditionSeed, metrics: Record<string, Metric>) {
+  if (seed.status !== "published") return metrics;
+  for (const [id, m] of Object.entries(seed.metrics)) {
+    const out = metrics[id] as unknown as Record<string, unknown>;
+    const frozen = m as unknown as Record<string, unknown>;
+    if (!out || frozen.direction === undefined) continue;
+    for (const k of FROZEN_KEYS) if (frozen[k] !== undefined) out[k] = frozen[k];
+  }
+  return metrics;
+}
+
 export function getEdition(id: string): Edition {
   const seed = loadEditionSeed(id);
   const cfg = loadMetricsConfig();
-  const metrics = enrichMetrics(seed, cfg);
+  const metrics = applyFrozen(seed, enrichMetrics(seed, cfg));
   const vix = metrics.vix;
   if (vix?.value == null) throw new Error("Edition is missing the VIX value required for the alert banner");
-  const alert = buildAlert(vix.value, vix.period_label, metrics.yield_curve?.value ?? null);
+  const { history, snapshot } = historyFor(id);
+  const raw = seed as unknown as { correlations?: Edition["correlations"]; alert?: Edition["alert"] };
+  const published = seed.status === "published";
   return {
     ...seed,
     metrics,
-    correlations: computeCorrelations(loadUsAnnual(), loadTexasAnnual()),
-    alert,
+    correlations: published && raw.correlations ? raw.correlations : computeCorrelations(history.us, history.tx),
+    alert: published && raw.alert ? raw.alert : buildAlert(vix.value, vix.period_label, metrics.yield_curve?.value ?? null),
     references: buildReferences(seed, metrics),
+    history,
+    history_snapshot: snapshot,
   };
 }
