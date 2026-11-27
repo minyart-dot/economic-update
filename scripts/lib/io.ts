@@ -65,6 +65,11 @@ export interface AutoMetric {
   year_ago_period?: string | null;
   as_of: string;
   source_url?: string;
+  /** Preformatted text from the fetcher when a number alone is not the published form ("~56%", "3.75–4.00%", "+165,000"). */
+  display?: string;
+  year_ago_display?: string;
+  /** Context sentence from the fetcher (payrolls: prior 12-month average). */
+  notes?: string;
   stale?: boolean;
   error?: string | null;
 }

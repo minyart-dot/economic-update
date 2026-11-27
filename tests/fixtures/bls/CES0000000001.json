@@ -1,0 +1,328 @@
+{
+ "_note": "SYNTHETIC TEST DATA for tests/fetch. Not real FRED/BLS data. Anchors match data/editions/2026-11.json: Oct 2026 change +165 (thousands) and a prior 12-month average change of 48 (Oct 2025-Sep 2026); all other levels are made-up filler.",
+ "status": "REQUEST_SUCCEEDED",
+ "responseTime": 120,
+ "message": [],
+ "Results": {
+  "series": [
+   {
+    "seriesID": "CES0000000001",
+    "data": [
+     {
+      "year": "2026",
+      "period": "M10",
+      "periodName": "October",
+      "latest": "true",
+      "value": "159671",
+      "footnotes": [
+       {
+        "code": "P",
+        "text": "preliminary"
+       }
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M09",
+      "periodName": "September",
+      "value": "159506",
+      "footnotes": [
+       {
+        "code": "P",
+        "text": "preliminary"
+       }
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M08",
+      "periodName": "August",
+      "value": "159460",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M07",
+      "periodName": "July",
+      "value": "159345",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M06",
+      "periodName": "June",
+      "value": "159325",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M05",
+      "periodName": "May",
+      "value": "159250",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M04",
+      "periodName": "April",
+      "value": "159210",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M03",
+      "periodName": "March",
+      "value": "159120",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M02",
+      "periodName": "February",
+      "value": "159105",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2026",
+      "period": "M01",
+      "periodName": "January",
+      "value": "159045",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M12",
+      "periodName": "December",
+      "value": "159015",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M11",
+      "periodName": "November",
+      "value": "158970",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M10",
+      "periodName": "October",
+      "value": "158900",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M09",
+      "periodName": "September",
+      "value": "158930",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M08",
+      "periodName": "August",
+      "value": "158875",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M07",
+      "periodName": "July",
+      "value": "158850",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M06",
+      "periodName": "June",
+      "value": "158820",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M05",
+      "periodName": "May",
+      "value": "158780",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M04",
+      "periodName": "April",
+      "value": "158710",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M03",
+      "periodName": "March",
+      "value": "158630",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M02",
+      "periodName": "February",
+      "value": "158520",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2025",
+      "period": "M01",
+      "periodName": "January",
+      "value": "158425",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M12",
+      "periodName": "December",
+      "value": "158305",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M11",
+      "periodName": "November",
+      "value": "158160",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M10",
+      "periodName": "October",
+      "value": "157950",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M09",
+      "periodName": "September",
+      "value": "157890",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M08",
+      "periodName": "August",
+      "value": "157740",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M07",
+      "periodName": "July",
+      "value": "157610",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M06",
+      "periodName": "June",
+      "value": "157515",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M05",
+      "periodName": "May",
+      "value": "157405",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M04",
+      "periodName": "April",
+      "value": "157230",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M03",
+      "periodName": "March",
+      "value": "157110",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M02",
+      "periodName": "February",
+      "value": "156905",
+      "footnotes": [
+       {}
+      ]
+     },
+     {
+      "year": "2024",
+      "period": "M01",
+      "periodName": "January",
+      "value": "156765",
+      "footnotes": [
+       {}
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

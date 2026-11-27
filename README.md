@@ -10,7 +10,7 @@ The full build spec is `STATE_OF_THE_MARKET_SPEC.md` (text) and `docs/State_of_t
 |---|---|---|
 | 1 | Skeleton, design system, all 16 sections from static seed data | Done |
 | 2 | Charts C1–C17 (Recharts), data-table toggles | Done |
-| 3 | Data pipeline: FRED/Eurostat/Apartment List fetchers, `build-edition`, `validate-edition`, manual template | Done; fetchers tested with fixtures only (needs `FRED_API_KEY` for live data) |
+| 3 | Data pipeline: FRED/BLS/Eurostat/ONS/Apartment List/Kastle/NY Fed fetchers, `build-edition`, `validate-edition`, manual template | Done; fetchers tested with fixtures only (needs `FRED_API_KEY` for live data) |
 | 4 | Email signup (top of page + footer), Buttondown, monthly email, send workflow | Done; needs the accounts below to go live |
 | — | Reader topic filter ("Choose topics", saved in the reader's browser) | Done |
 | 5 | Monthly data PR workflow, PDF, `/sources` | Done: `monthly-update.yml`, `npm run pdf`, PDF + email publish flow in `newsletter.yml`, `/sources`; the workflows have not run on GitHub yet |
@@ -85,6 +85,13 @@ npm test
 - `validate` implements spec 14.3 and exits 1 on any FAIL. Allow-listed banned-word matches (the "no forecast"
   disclaimer, the VIX definition) are listed with their reason in the report. Optional per-metric `max_age_days`
   and `typical_move` in `metrics.yaml` tune the freshness and large-move warnings.
+- Kastle office occupancy (`office_occupancy_kastle`, scraped from the Back to Work Barometer page) and NY Fed
+  household debt delinquency (`hh_debt_delinquent`, read from the quarterly Household Debt and Credit data
+  workbook) are fetched on a best-effort basis by `npm run fetch`. Strict checks apply: one unambiguous figure,
+  a plausible range, and a recent week or the expected quarter. If anything looks wrong, the last value is kept
+  marked stale and the metric shows up in the manual template for you to enter (no value is ever guessed).
+  Set `KASTLE_URL` if the page moves. Set `NYFED_HHDC_URL` to the current workbook
+  link; by default it is derived as `.../householdcredit/data/xls/HHD_C_Report_<YYYY>Q<n>.xlsx`.
 
 ## AI drafting (optional)
 
@@ -151,7 +158,9 @@ quietly (with a warning in the Actions log) when they don't. Never commit real v
 | `SITE_URL` | Vercel env + GitHub variable | Links in emails, sitemap, link previews | Yes, to go live |
 | `BUTTONDOWN_API_KEY` | Vercel env + GitHub secret | Email signup, monthly email, volatility alerts | Yes, for email |
 | `FRED_API_KEY` | GitHub secret | Monthly data fetch, volatility alerts | Yes, for automatic data |
-| `APARTMENTLIST_CSV_URL` | GitHub variable/secret | Rent data (Apartment List renames the file monthly) | Recommended |
+| `APARTMENTLIST_CSV_URL` | GitHub variable | Rent data (Apartment List renames the file monthly) | Recommended |
+| `NYFED_HHDC_URL` | GitHub variable | NY Fed household-debt workbook link, if the default quarterly name doesn't match | Optional |
+| `KASTLE_URL` | GitHub variable | Kastle barometer page, if it moves | Optional |
 | `BLS_API_KEY` | GitHub secret | Higher BLS rate limits | Optional |
 | `ANTHROPIC_API_KEY` | GitHub secret | AI-drafted summary and audit in the monthly PR | Optional |
 | `ANTHROPIC_MODEL` | GitHub variable | Override the AI model | Optional |

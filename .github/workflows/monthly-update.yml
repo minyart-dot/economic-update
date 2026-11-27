@@ -55,6 +55,10 @@ jobs:
     env:
       FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+      # Optional link overrides for sources whose file names change (empty = built-in default).
+      APARTMENTLIST_CSV_URL: ${{ vars.APARTMENTLIST_CSV_URL }}
+      KASTLE_URL: ${{ vars.KASTLE_URL }}
+      NYFED_HHDC_URL: ${{ vars.NYFED_HHDC_URL }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
       GH_TOKEN: ${{ github.token }}

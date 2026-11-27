@@ -1,5 +1,6 @@
-// Builds data/manual/YYYY-MM.yaml (spec Section 11.2): one entry per MANUAL/SEMI metric, plus any
-// AUTO metric the fetchers could not refresh, pre-filled with last edition's values marked stale.
+// Builds data/manual/YYYY-MM.yaml (spec Section 11.2): one entry per MANUAL metric, per SEMI metric
+// without a fresh value in auto.json, and per AUTO metric the fetchers could not refresh, pre-filled
+// with last edition's values marked stale.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -107,10 +108,13 @@ export function makeManualTemplate(root: string, id: string): TemplateResult {
   const entries: { id: string; yaml: string }[] = [];
   for (const [mid, c] of Object.entries(cfg.metrics)) {
     let reason: string | null = null;
-    if (c.automation !== "AUTO") reason = "entered by hand";
-    else if (!auto) reason = "auto.json missing";
-    else if (!autoUsable(auto.metrics[mid])) {
-      const a = auto.metrics[mid];
+    const a = auto?.metrics[mid];
+    if (c.automation === "MANUAL") reason = "entered by hand";
+    else if (c.automation === "SEMI") {
+      // SEMI = best-effort fetcher: a fresh value in auto.json needs no hand entry; otherwise enter it.
+      if (!autoUsable(a)) reason = a?.error ? `entered by hand (best-effort fetch failed: ${a.error})` : "entered by hand";
+    } else if (!auto) reason = "auto.json missing";
+    else if (!autoUsable(a)) {
       reason = a?.error ? `fetch failed: ${a.error}` : a ? "fetch came back stale" : "not in auto.json";
     }
     if (!reason) continue;
@@ -118,7 +122,7 @@ export function makeManualTemplate(root: string, id: string): TemplateResult {
   }
 
   const autoNote = auto
-    ? `AUTO metrics fetched fresh in data/raw/${id}/auto.json are not listed; only those that came back stale or failed.`
+    ? `AUTO/SEMI metrics fetched fresh in data/raw/${id}/auto.json are not listed; only those that came back stale or failed.`
     : `data/raw/${id}/auto.json was not found, so every AUTO metric is listed too (normally they are fetched).`;
   const body = `${header(id, prevId, autoNote)}\nedition: ${q(id)}\nmetrics:\n${entries.map((e) => e.yaml).join("\n\n")}\n`;
   fs.mkdirSync(path.dirname(file), { recursive: true });
