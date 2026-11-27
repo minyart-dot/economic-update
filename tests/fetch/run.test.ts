@@ -126,9 +126,14 @@ describe("runFetch: acceptance against the November 2026 edition (synthetic FRED
     assert.equal(file.extras.permits_ytd_houston.value, null);
   });
   it("AUTO metrics without a fetcher are listed as stale, MANUAL metrics are not listed", () => {
-    assert.equal(m.payrolls_change.stale, true);
-    assert.match(m.payrolls_change.error!, /No automated fetcher/);
+    for (const [id, r] of Object.entries(m)) if (/No automated fetcher/.test(r.error ?? "")) assert.equal(r.stale, true, id);
     assert.equal(m.existing_home_sales, undefined);
+  });
+  it("payrolls_change +165,000 from PAYEMS with the prior 12-month average in notes", () => {
+    expectEdition("payrolls_change", { period: true });
+    assert.equal(m.payrolls_change.display, edition.metrics.payrolls_change.display);
+    assert.equal(m.payrolls_change.notes, "Prior 12-month average 48,000.");
+    assert.equal(m.payrolls_change.year_ago, null);
   });
   it("writes auto.json and the raw responses, with no API key in them", () => {
     const written = JSON.parse(fs.readFileSync(path.join(outDir, "auto.json"), "utf8"));
