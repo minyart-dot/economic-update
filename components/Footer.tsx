@@ -6,7 +6,7 @@ export function Footer({ editionLabel, showForm = true }: { editionLabel: string
   return (
     <footer className="mt-16 border-t-[3px] border-navy bg-panel">
       <div className="mx-auto grid max-w-[1340px] gap-8 px-4 py-10 sm:px-6 md:grid-cols-2">
-        <div>
+        <div className="no-print">
           {showForm && (
             <>
               <p className="text-[15px] font-bold text-navy">Get the brief by email</p>
@@ -21,9 +21,12 @@ export function Footer({ editionLabel, showForm = true }: { editionLabel: string
           <p className="mt-1 text-dark">
             Every figure links to its source. Arrows compare with the same period a year earlier.
           </p>
-          <p className="mt-3 flex gap-4 md:justify-end">
+          <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
             <Link href="/methodology" className="source-link">
               Methodology and glossary
+            </Link>
+            <Link href="/sources" className="source-link">
+              Sources
             </Link>
             <Link href="/archive" className="source-link">
               Past editions

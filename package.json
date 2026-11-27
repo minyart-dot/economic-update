@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "newsletter": "tsx scripts/send-newsletter.ts"
+    "newsletter": "tsx scripts/send-newsletter.ts",
+    "pdf": "tsx scripts/render-pdf.ts"
   },
   "dependencies": {
     "js-yaml": "^5.5.0",
@@ -25,6 +26,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.29",
+    "playwright": "1.63.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"

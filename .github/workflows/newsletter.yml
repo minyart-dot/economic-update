@@ -1,11 +1,19 @@
-# Sends the monthly email (spec 12.2, 13.3).
+# Publishes an approved edition: PDF, then the monthly email (spec 12.2, 13.3).
 #
 # Automatic: when a commit on main changes data/editions/ and an edition has
-# "status": "ready", this waits until that edition's page is live on SITE_URL, emails all
-# subscribers through Buttondown, then commits newsletter_sent_at back so it never sends twice.
+# "status": "ready" (set by the owner in the edition PR, then merged), this
+#   1. waits until that edition's page is live on SITE_URL,
+#   2. renders the PDF from the live page and commits public/editions/YYYY-MM.pdf [skip ci]
+#      (if this fails, a warning is logged and the email still goes out, without the PDF link),
+#   3. emails all subscribers through Buttondown,
+#   4. commits newsletter_sent_at and "status": "published" back, so it never sends twice.
+# Nothing here runs without a human merge to main.
 #
-# Manual: Actions > "Monthly newsletter" > Run workflow. Choose "dry-run" to create a
-# Buttondown draft you can preview (nothing is sent), or "send".
+# Manual: Actions > "Monthly newsletter" > Run workflow.
+#   dry-run   renders the PDF (uploaded as a workflow artifact, not committed) and creates a
+#             Buttondown draft you can preview; nothing is sent
+#   send      the full publish flow above for the chosen edition
+#   pdf-only  (re-)renders and commits the PDF for the chosen edition; no email
 #
 # Setup: repository secret BUTTONDOWN_API_KEY and repository variable SITE_URL
 # (e.g. https://your-site.vercel.app).
@@ -19,13 +27,13 @@ on:
   workflow_dispatch:
     inputs:
       edition:
-        description: "Edition to email (YYYY-MM). Leave blank for the newest 'ready' edition."
+        description: "Edition (YYYY-MM). Leave blank for the newest 'ready' edition not yet emailed."
         required: false
         default: ""
       mode:
-        description: "dry-run creates a Buttondown draft only; send emails everyone"
+        description: "dry-run creates a Buttondown draft only; send emails everyone; pdf-only renders the PDF"
         type: choice
-        options: [dry-run, send]
+        options: [dry-run, send, pdf-only]
         default: dry-run
 
 permissions:
@@ -38,10 +46,11 @@ concurrency:
 jobs:
   send:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
       SITE_URL: ${{ vars.SITE_URL }}
+      MODE: ${{ github.event_name == 'push' && 'send' || inputs.mode }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,20 +61,98 @@ jobs:
 
       - name: Check configuration
         run: |
-          if [ -z "$BUTTONDOWN_API_KEY" ] || [ -z "$SITE_URL" ]; then
-            echo "::warning::BUTTONDOWN_API_KEY secret or SITE_URL variable is not set; skipping."
+          if [ -z "$SITE_URL" ]; then
+            echo "::warning::SITE_URL variable is not set; skipping."
+            echo "SKIP=1" >> "$GITHUB_ENV"
+          elif [ -z "$BUTTONDOWN_API_KEY" ] && [ "$MODE" != "pdf-only" ]; then
+            echo "::warning::BUTTONDOWN_API_KEY secret is not set; skipping."
             echo "SKIP=1" >> "$GITHUB_ENV"
           fi
 
-      - name: Send (automatic, after an edition is marked ready)
-        if: env.SKIP != '1' && github.event_name == 'push'
-        run: npm run newsletter -- --auto --send --wait
-
-      - name: Send or draft (manual)
-        if: env.SKIP != '1' && github.event_name == 'workflow_dispatch'
+      # Same choice as `npm run newsletter -- --auto`: the newest "ready" edition without
+      # newsletter_sent_at. Empty when there is nothing to publish.
+      - name: Pick the edition
+        id: pick
+        if: env.SKIP != '1'
         env:
           EDITION: ${{ inputs.edition }}
-          MODE: ${{ inputs.mode }}
+        run: |
+          # shellcheck disable=SC2016 # JavaScript template literal, not shell
+          ID=$(node -e '
+            const fs = require("fs");
+            const want = process.env.EDITION;
+            if (want) { console.log(want); process.exit(0); }
+            const ids = fs.readdirSync("data/editions").filter((f) => /^\d{4}-\d{2}\.json$/.test(f)).map((f) => f.slice(0, 7)).sort();
+            const ready = ids.filter((id) => { const e = JSON.parse(fs.readFileSync(`data/editions/${id}.json`, "utf8")); return e.status === "ready" && !e.newsletter_sent_at; });
+            console.log(ready.at(-1) ?? "");
+          ')
+          echo "Edition: ${ID:-none}"
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+          # Re-runs reuse a PDF already committed for this edition, unless asked to re-render.
+          if [ -n "$ID" ] && { [ ! -f "public/editions/$ID.pdf" ] || [ "$MODE" = "pdf-only" ]; }; then
+            echo "render=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ---- PDF (never blocks the email) -------------------------------------------------
+      - name: Install Chromium for the PDF
+        id: browser
+        if: steps.pick.outputs.render == '1'
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium
+
+      - name: Render the PDF from the live page
+        id: pdf
+        if: steps.pick.outputs.render == '1' && steps.browser.outcome == 'success'
+        continue-on-error: true
+        env:
+          ID: ${{ steps.pick.outputs.id }}
+        run: npm run pdf -- "$ID" --url "$SITE_URL" --wait
+
+      - name: Warn if the PDF failed
+        if: steps.pick.outputs.render == '1' && (steps.browser.outcome == 'failure' || steps.pdf.outcome != 'success')
+        run: echo "::warning::PDF for ${{ steps.pick.outputs.id }} was not rendered; continuing without it. Re-run later with mode pdf-only."
+
+      - name: Commit the PDF
+        id: commit_pdf
+        if: steps.pdf.outcome == 'success' && env.MODE != 'dry-run'
+        continue-on-error: true
+        env:
+          ID: ${{ steps.pick.outputs.id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "public/editions/$ID.pdf"
+          if git diff --cached --quiet; then echo "PDF unchanged."; exit 0; fi
+          git commit -m "Add PDF for edition $ID [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Warn if the PDF commit failed
+        if: steps.commit_pdf.outcome == 'failure'
+        # The email step drops the PDF link by itself if the PDF is not live on SITE_URL.
+        run: |
+          echo "::warning::Could not push the PDF commit; the email will go out without the PDF link if it is not live."
+          git rebase --abort 2>/dev/null || true
+
+      - name: Upload the PDF
+        if: steps.pdf.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: edition-pdf
+          path: public/editions/${{ steps.pick.outputs.id }}.pdf
+          if-no-files-found: ignore
+
+      # ---- Email -------------------------------------------------------------------------
+      - name: Send (automatic, after an edition is marked ready)
+        if: env.SKIP != '1' && github.event_name == 'push' && steps.pick.outputs.id != ''
+        env:
+          ID: ${{ steps.pick.outputs.id }}
+        run: npm run newsletter -- "$ID" --send --wait
+
+      - name: Send or draft (manual)
+        if: env.SKIP != '1' && github.event_name == 'workflow_dispatch' && env.MODE != 'pdf-only'
+        env:
+          EDITION: ${{ inputs.edition }}
         run: |
           TARGET="${EDITION:---auto}"
           npm run newsletter -- "$TARGET" "--$MODE" --wait
@@ -86,5 +173,6 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/editions
             git commit -m "Record newsletter_sent_at [skip ci]"
-            git push
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

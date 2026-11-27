@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site}/`, changeFrequency: "monthly", priority: 1 },
     { url: `${site}/archive`, changeFrequency: "monthly" },
     { url: `${site}/methodology`, changeFrequency: "yearly" },
+    { url: `${site}/sources`, changeFrequency: "monthly" },
     { url: `${site}/subscribe`, changeFrequency: "yearly" },
     ...editions.map((id) => ({ url: `${site}/archive/${id}`, lastModified: loadEditionSeed(id).published_at })),
   ];

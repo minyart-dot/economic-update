@@ -81,6 +81,10 @@ body {
   .no-print {
     display: none !important;
   }
+  /* The section nav is hidden, so the content takes the whole grid instead of its 210px column. */
+  main#main {
+    grid-column: 1 / -1;
+  }
   body {
     font-size: 11pt;
   }

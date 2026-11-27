@@ -4,6 +4,7 @@ import { fmtR, metroPermitStats } from "@/lib/analytics";
 import { buildChartData } from "@/lib/chartData";
 import { colorFor, computeChange } from "@/lib/compare";
 import { loadSections, loadTexasAnnual } from "@/lib/data";
+import { pdfHref } from "@/lib/pdf";
 import { formatInt, formatPctChange, hostname } from "@/lib/format";
 import { GLOSSARY } from "@/lib/glossary";
 import type { Edition, Metric, TileSeed } from "@/lib/types";
@@ -114,7 +115,7 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
 
   return (
     <>
-      <HeaderBand editionLabel={ed.edition_label} dataAsOf={ed.data_as_of_label} />
+      <HeaderBand editionLabel={ed.edition_label} dataAsOf={ed.data_as_of_label} pdfHref={pdfHref(ed.edition)} />
       <div className="mx-auto max-w-[1340px] lg:grid lg:grid-cols-[210px_minmax(0,1100px)] lg:gap-8 lg:px-6">
         <SectionNav items={nav} />
         <main id="main" className="min-w-0 px-4 pb-8 sm:px-6 lg:px-0">

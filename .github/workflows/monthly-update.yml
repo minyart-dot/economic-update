@@ -1,0 +1,257 @@
+# Prepares each month's edition as a pull request for the owner to review (spec 12.1, 12.4, 15).
+#
+# Scheduled: the 25th of each month at 14:00 UTC (9am Central in summer, 8am in winter).
+# Manual:    Actions > "Monthly edition update" > Run workflow (optionally pick the edition).
+#
+#   1. Pull the automated data (npm run fetch). Failed sources keep last month's value, marked stale.
+#   2. Create data/manual/YYYY-MM.yaml if it doesn't exist yet (npm run manual-template).
+#   3. Build data/editions/YYYY-MM.json as a draft (npm run build:edition -- --draft). This fails
+#      while required manual fields are stale; the PR is opened anyway so the owner can fill them in.
+#   4. Validate (npm run validate) and keep the report even when it fails.
+#   5. Commit to branch edition/YYYY-MM and open (or update) the PR
+#      "Edition YYYY-MM: review & publish" with the manual-field checklist and the report.
+#
+# Owner edits on edition/* branches (e.g. in GitHub's web editor) re-run the build and validation
+# and refresh one validation comment on the PR.
+#
+# Nothing is published here: the email and PDF go out only after the owner sets
+# "status": "ready" and merges the PR (see newsletter.yml). This workflow never force-pushes.
+#
+# Setup: repository secret FRED_API_KEY (optional BLS_API_KEY), and in Settings > Actions > General
+# turn on "Allow GitHub Actions to create and approve pull requests".
+
+name: Monthly edition update
+
+on:
+  schedule:
+    - cron: "0 14 25 * *"
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: "Edition to prepare (YYYY-MM). Leave blank for the current month (America/Chicago)."
+        required: false
+        default: ""
+  push:
+    branches: ["edition/**"]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: monthly-update-${{ github.event_name == 'push' && github.ref_name || inputs.edition || 'scheduled' }}
+  cancel-in-progress: false
+
+jobs:
+  edition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Work out the edition
+        id: ed
+        env:
+          INPUT_EDITION: ${{ inputs.edition }}
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT" = "push" ]; then
+            ID="${GITHUB_REF_NAME#edition/}"
+          else
+            ID="${INPUT_EDITION:-$(TZ=America/Chicago date +%Y-%m)}"
+          fi
+          if ! [[ "$ID" =~ ^[0-9]{4}-(0[1-9]|1[0-2])$ ]]; then
+            echo "::error::'$ID' is not an edition id like 2026-12."
+            exit 1
+          fi
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+          echo "branch=edition/$ID" >> "$GITHUB_OUTPUT"
+          echo "Edition $ID"
+
+          # Never rebuild an edition that has already been approved or published on main.
+          MAIN_STATUS=$(git show "origin/$DEFAULT_BRANCH:data/editions/$ID.json" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).status??"")}catch{console.log("")}})')
+          if [ "$MAIN_STATUS" = "ready" ] || [ "$MAIN_STATUS" = "published" ]; then
+            echo "::notice::Edition $ID is already '$MAIN_STATUS' on $DEFAULT_BRANCH; nothing to do."
+            echo "stop=1" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # On owner pushes, rebuild only when inputs changed (manual YAML, raw data, config).
+          # If only the edition JSON changed (text edits, "status": "ready"), validate it as is so
+          # the rebuild can't overwrite those edits.
+          REBUILD=1
+          if [ "$EVENT" = "push" ] && [ -n "$BEFORE" ] && ! [[ "$BEFORE" =~ ^0+$ ]]; then
+            CHANGED=$(git diff --name-only "$BEFORE" "$GITHUB_SHA" || echo "unknown")
+            echo "Changed files:"; echo "$CHANGED"
+            if [ -n "$CHANGED" ] && ! echo "$CHANGED" | grep -qv '^data/editions/'; then
+              REBUILD=0
+            fi
+          fi
+          echo "rebuild=$REBUILD" >> "$GITHUB_OUTPUT"
+
+      - name: Switch to the edition branch
+        if: steps.ed.outputs.stop != '1' && github.event_name != 'push'
+        env:
+          BRANCH: ${{ steps.ed.outputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null; then
+            # Re-run: keep the owner's edits on the branch and bring in anything new from main.
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+            if ! git merge --no-edit "origin/$DEFAULT_BRANCH"; then
+              git merge --abort
+              echo "::warning::Could not merge $DEFAULT_BRANCH into $BRANCH cleanly; continuing on the branch as it is."
+            fi
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+      - name: Fetch automated data
+        if: steps.ed.outputs.stop != '1' && github.event_name != 'push'
+        continue-on-error: true # spec 12.4: a failed source never blocks the run
+        run: npm run fetch -- "${{ steps.ed.outputs.id }}"
+
+      - name: Create the manual template if missing
+        if: steps.ed.outputs.stop != '1' && github.event_name != 'push'
+        continue-on-error: true
+        run: npm run manual-template -- "${{ steps.ed.outputs.id }}"
+
+      - name: Build the draft edition
+        id: build
+        if: steps.ed.outputs.stop != '1'
+        env:
+          ID: ${{ steps.ed.outputs.id }}
+          REBUILD: ${{ steps.ed.outputs.rebuild }}
+        run: |
+          mkdir -p out
+          if [ "$REBUILD" != "1" ]; then
+            echo "Only the edition JSON changed; skipping the rebuild."
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          FILE="data/editions/$ID.json"
+          # Keep an owner's "ready" through a rebuild (build:edition --draft writes "draft").
+          BEFORE_STATUS=$(node -e 'try{console.log(require("./'"$FILE"'").status??"")}catch{console.log("")}')
+          set +e
+          npm run build:edition -- "$ID" --draft 2>&1 | tee "out/build-$ID.log"
+          CODE=${PIPESTATUS[0]}
+          set -e
+          if [ "$BEFORE_STATUS" = "ready" ] && [ -f "$FILE" ]; then
+            node -e 'const fs=require("fs");const f=process.argv[1];const j=JSON.parse(fs.readFileSync(f,"utf8"));j.status="ready";fs.writeFileSync(f,JSON.stringify(j,null,2)+"\n")' "$FILE"
+          fi
+          echo "status=$CODE" >> "$GITHUB_OUTPUT"
+          if [ "$CODE" != "0" ]; then
+            echo "::warning::build:edition exited $CODE (usually stale required manual fields). The PR still opens so they can be filled in."
+          fi
+
+      - name: Validate
+        id: validate
+        if: steps.ed.outputs.stop != '1'
+        env:
+          ID: ${{ steps.ed.outputs.id }}
+        run: |
+          set +e
+          npm run validate -- "$ID" --report "out/validation-$ID.md" 2>&1 | tee "out/validate-$ID.log"
+          CODE=${PIPESTATUS[0]}
+          set -e
+          if [ ! -s "out/validation-$ID.md" ]; then
+            { echo "Validation did not produce a report (exit $CODE). Log:"; echo '```'; tail -n 60 "out/validate-$ID.log"; echo '```'; } > "out/validation-$ID.md"
+          fi
+          echo "status=$CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push to the edition branch
+        if: steps.ed.outputs.stop != '1'
+        env:
+          ID: ${{ steps.ed.outputs.id }}
+          BRANCH: ${{ steps.ed.outputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            if [ "${{ github.event_name }}" = "push" ]; then MSG="Edition $ID: rebuild after edits"; else MSG="Edition $ID: automated data refresh"; fi
+            git commit -m "$MSG"
+          fi
+          # Pushes made with GITHUB_TOKEN don't start this workflow again, so there is no loop.
+          # Plain push only; if the owner pushed meanwhile, rebase onto it rather than overwrite.
+          if ! git push origin "HEAD:refs/heads/$BRANCH"; then
+            git pull --rebase origin "$BRANCH"
+            git push origin "HEAD:refs/heads/$BRANCH"
+          fi
+
+      - name: Write the PR body and validation comment
+        if: steps.ed.outputs.stop != '1'
+        env:
+          ID: ${{ steps.ed.outputs.id }}
+        run: |
+          COMMON=(--report "out/validation-$ID.md" --build-log "out/build-$ID.log" --build-status "${{ steps.build.outputs.status }}" --validate-status "${{ steps.validate.outputs.status }}")
+          npx tsx scripts/edition-pr-body.ts "$ID" --kind body --out "out/pr-body-$ID.md" "${COMMON[@]}"
+          npx tsx scripts/edition-pr-body.ts "$ID" --kind comment --out "out/pr-comment-$ID.md" "${COMMON[@]}"
+
+      - name: Open or update the pull request
+        id: pr
+        if: steps.ed.outputs.stop != '1'
+        env:
+          ID: ${{ steps.ed.outputs.id }}
+          BRANCH: ${{ steps.ed.outputs.branch }}
+        run: |
+          PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -z "$PR" ] && [ "${{ github.event_name }}" != "push" ]; then
+            gh pr create --base "$DEFAULT_BRANCH" --head "$BRANCH" \
+              --title "Edition $ID: review & publish" --body-file "out/pr-body-$ID.md"
+            PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          elif [ -n "$PR" ] && [ "${{ github.event_name }}" != "push" ]; then
+            # Re-run of the monthly job: refresh the description in the same PR.
+            gh pr edit "$PR" --title "Edition $ID: review & publish" --body-file "out/pr-body-$ID.md"
+          fi
+          echo "number=$PR" >> "$GITHUB_OUTPUT"
+          if [ -z "$PR" ]; then echo "::notice::No open PR for $BRANCH; open one to see the validation comment."; fi
+
+      - name: Post or update the validation comment
+        if: steps.ed.outputs.stop != '1' && steps.pr.outputs.number != ''
+        env:
+          PR: ${{ steps.pr.outputs.number }}
+          ID: ${{ steps.ed.outputs.id }}
+        run: |
+          MARKER='<!-- state-of-the-market:validation -->'
+          COMMENT_ID=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -n 1)
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F "body=@out/pr-comment-$ID.md" > /dev/null
+            echo "Updated comment $COMMENT_ID"
+          else
+            gh pr comment "$PR" --body-file "out/pr-comment-$ID.md"
+          fi
+
+      - name: Keep the reports
+        if: always() && steps.ed.outputs.stop != '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: edition-${{ steps.ed.outputs.id }}-reports
+          path: out/
+          if-no-files-found: ignore
+
+      # A red check on the PR means "not ready to merge". Stale manual fields alone don't fail it
+      # (the build warning and checklist cover those); a validation FAIL does.
+      - name: Fail if validation failed
+        if: steps.ed.outputs.stop != '1' && steps.validate.outputs.status != '0'
+        run: |
+          echo "::error::Validation failed for ${{ steps.ed.outputs.id }}. See the report in the PR."
+          exit 1

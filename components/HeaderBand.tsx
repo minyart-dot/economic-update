@@ -1,7 +1,18 @@
 import Link from "next/link";
 
 /** Navy header band with the teal/orange stripe (spec 4.2, 4.4 #1). */
-export function HeaderBand({ editionLabel, dataAsOf, subscribeHref = "#subscribe-top" }: { editionLabel: string; dataAsOf: string; subscribeHref?: string }) {
+export function HeaderBand({
+  editionLabel,
+  dataAsOf,
+  subscribeHref = "#subscribe-top",
+  pdfHref = null,
+}: {
+  editionLabel: string;
+  dataAsOf: string;
+  subscribeHref?: string;
+  /** Link to the PDF edition, when one has been rendered (hidden in print). */
+  pdfHref?: string | null;
+}) {
   return (
     <header className="bg-navy text-white">
       <div className="mx-auto flex max-w-[1340px] flex-col gap-4 px-4 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-6 lg:py-8">
@@ -22,6 +33,15 @@ export function HeaderBand({ editionLabel, dataAsOf, subscribeHref = "#subscribe
           <div className="text-left sm:text-right">
             <p className="text-sm font-semibold">{editionLabel}</p>
             <p className="text-[12px] text-white/70">Data as of {dataAsOf}</p>
+            {pdfHref && (
+              <a
+                href={pdfHref}
+                download
+                className="no-print mt-0.5 inline-block text-[12px] text-white underline decoration-white/60 underline-offset-2 hover:decoration-white"
+              >
+                Download PDF
+              </a>
+            )}
           </div>
           <a
             href={subscribeHref}
