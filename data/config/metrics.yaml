@@ -60,6 +60,7 @@ metrics:
     fred: JTSJOL
     source_name: BLS JOLTS via FRED
     source_url: https://fred.stlouisfed.org/series/JTSJOL
+    max_age_days: 60  # JOLTS is released about 5-6 weeks after the month
   payrolls_change:
     label: Jobs added (nonfarm payrolls)
     unit: count
@@ -87,6 +88,7 @@ metrics:
     frequency: quarterly
     source_name: NY Fed College Labor Market
     source_url: https://www.newyorkfed.org/research/college-labor-market
+    max_age_days: 160
 
   # ---------------------------------------------------------------- Prices and rates
   cpi_yoy:
@@ -100,6 +102,7 @@ metrics:
     source_name: BLS CPI via FRED
     source_url: https://fred.stlouisfed.org/series/CPIAUCSL
     required: true
+    max_age_days: 60  # 12-month rate can lag when a month is skipped (Oct 2025 shutdown)
   core_cpi_yoy:
     label: Core inflation (CPI ex food and energy)
     unit: pct
@@ -110,6 +113,7 @@ metrics:
     fred: CPILFESL
     source_name: BLS CPI
     source_url: https://www.bls.gov/news.release/cpi.htm
+    max_age_days: 60
   energy_cpi_yoy:
     label: Energy prices (CPI energy, yearly)
     unit: pct
@@ -120,6 +124,7 @@ metrics:
     fred: CPIENGSL
     source_name: BLS CPI
     source_url: https://www.bls.gov/news.release/cpi.htm?lv=true
+    max_age_days: 60
   fed_funds:
     label: Fed funds rate
     unit: pct
@@ -329,6 +334,7 @@ metrics:
     frequency: monthly
     source_name: MHARR via Manufactured Home Pro News
     source_url: https://www.manufacturedhomepronews.com/mharr-v-mhi-dueling-aug-2026-report-on-new-hud-code-manufactured-housing-industry-data-what-the-latest-key-performance-indicators-kpis-revealed-celebrate-hold-kpi-ignore-crooked-e-fea/
+    max_age_days: 90  # MHARR reports about 2 months after the month
   mh_avg_new_price:
     label: Average new manufactured home price
     unit: usd
@@ -338,6 +344,7 @@ metrics:
     fred: SPTNSAUS
     source_name: Census via FRED
     source_url: https://fred.stlouisfed.org/series/SPTNSAUS
+    max_age_days: 160  # Census manufactured-home prices lag about 4-5 months
   mortgage_delinquency:
     label: Mortgage delinquency rate (MBA)
     unit: pct
@@ -365,6 +372,7 @@ metrics:
     frequency: quarterly
     source_name: ATTOM Home Flipping Report
     source_url: https://www.attomdata.com/news/market-trends/flipping/home-flipping-profits-continue-gradual-two-year-decline/
+    max_age_days: 160
   flip_gross_profit:
     label: Typical gross flipping profit
     unit: usd
@@ -373,6 +381,7 @@ metrics:
     frequency: quarterly
     source_name: ATTOM Home Flipping Report
     source_url: https://www.attomdata.com/news/market-trends/flipping/home-flipping-profits-continue-gradual-two-year-decline/
+    max_age_days: 160
   flip_rate:
     label: Flips as a share of all home sales
     unit: pct
@@ -382,6 +391,7 @@ metrics:
     frequency: quarterly
     source_name: ATTOM via Webull
     source_url: https://www.webull.com/news/15673816770479104
+    max_age_days: 160
   us_median_rent:
     label: U.S. median rent
     unit: usd
@@ -419,6 +429,7 @@ metrics:
     frequency: monthly
     source_name: Yardi Matrix
     source_url: https://www.yardimatrix.com/blog/us-office-market-outlook/
+    max_age_days: 60
   office_vacancy_moodys:
     label: Office vacancy (Moody's, annual)
     unit: pct
@@ -475,6 +486,7 @@ metrics:
     fred: CORCCACBS
     source_name: Federal Reserve via FRED
     source_url: https://fred.stlouisfed.org/series/CORCCACBS
+    max_age_days: 160
   card_delinquency:
     label: Card delinquency rate
     unit: pct
@@ -511,6 +523,7 @@ metrics:
     frequency: monthly
     source_name: ATTOM midyear report
     source_url: https://www.attomdata.com/?p=43794
+    max_age_days: 200  # Half-year total, refreshed at mid-year and year-end
   foreclosure_starts_h1:
     label: Foreclosure starts (H1)
     unit: count
@@ -519,6 +532,7 @@ metrics:
     frequency: monthly
     source_name: ATTOM via HousingWire
     source_url: https://www.housingwire.com/articles/us-foreclosures-rise-2026-midyear-attom-report/
+    max_age_days: 200
 
   # ---------------------------------------------------------------- Jobs and AI
   job_cuts_ytd:
@@ -557,6 +571,7 @@ metrics:
     fred: TXBPPRIV
     source_name: Census via FRED (NSA)
     source_url: https://fred.stlouisfed.org/series/TXBPPRIV
+    max_age_days: 60
   texas_median_price:
     label: Texas median home price
     unit: usd
@@ -582,6 +597,7 @@ metrics:
     frequency: quarterly
     source_name: Texas Real Estate Research Center (TRERC)
     source_url: https://texashuntingland.com/blog/texas-rural-land-market-data
+    max_age_days: 160
   tx_foreclosure_starts_h1:
     label: Texas foreclosure starts (H1)
     unit: count
@@ -590,6 +606,7 @@ metrics:
     frequency: monthly
     source_name: ATTOM midyear report
     source_url: https://www.attomdata.com/?p=42129
+    max_age_days: 200
   tx_personal_bankruptcies:
     label: Texas personal bankruptcies (annual)
     unit: count
@@ -606,6 +623,7 @@ metrics:
     frequency: monthly
     source_name: Texas Manufactured Housing Association
     source_url: https://www.texasmha.com/texas-manufactured-housing-market-report-sales-data-analysis
+    max_age_days: 60
 
   # ---------------------------------------------------------------- Europe
   euro_unemployment:
@@ -617,6 +635,7 @@ metrics:
     frequency: monthly
     source_name: Eurostat (une_rt_m)
     source_url: https://www.staffingindustry.com/news/global-daily-news/eu-jobless-rate-rises-to-62-in-september
+    max_age_days: 60
   eu_youth_unemployment:
     label: EU youth unemployment
     unit: pct
@@ -626,6 +645,7 @@ metrics:
     frequency: monthly
     source_name: Eurostat (une_rt_m)
     source_url: https://ec.europa.eu/eurostat
+    max_age_days: 60
   uk_unemployment:
     label: UK unemployment
     unit: pct
@@ -635,3 +655,4 @@ metrics:
     frequency: monthly
     source_name: ONS (MGSX)
     source_url: https://www.thestar.com.my/news/world/2026/11/18/britain039s-unemployment-rate-at-46-pct-in-q3
+    max_age_days: 60  # ONS publishes a rolling 3-month rate

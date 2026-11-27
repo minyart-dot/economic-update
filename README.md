@@ -10,10 +10,12 @@ The full build spec is `STATE_OF_THE_MARKET_SPEC.md` (text) and `docs/State_of_t
 |---|---|---|
 | 1 | Skeleton, design system, all 16 sections from static seed data | Done |
 | 2 | Charts C1–C17 (Recharts), data-table toggles | Done |
+| 3 | Data pipeline: FRED/Eurostat/Apartment List fetchers, `build-edition`, `validate-edition`, manual template | Done; fetchers tested with fixtures only (needs `FRED_API_KEY` for live data) |
 | 4 | Email signup (top of page + footer), Buttondown, monthly email, send workflow | Done; needs the accounts below to go live |
-| 3 | Data pipeline: fetchers, `build-edition.ts`, `validate-edition.ts`, manual template | Not started |
+| — | Reader topic filter ("Choose topics", saved in the reader's browser) | Done |
 | 5 | Monthly data PR workflow, PDF, `/sources` | Done: `monthly-update.yml`, `npm run pdf`, PDF + email publish flow in `newsletter.yml`, `/sources`; the workflows have not run on GitHub yet |
 | 6 | VIX alert emails, admin form, analytics, OG images | Optional |
+| Later | Accounts and personal metric alerts | Planned, see `docs/ROADMAP.md` |
 
 ## Run locally
 
