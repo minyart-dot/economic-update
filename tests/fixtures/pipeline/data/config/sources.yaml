@@ -1,0 +1,9 @@
+# SYNTHETIC test fixture: invented source registry (example.com).
+sources:
+  - { phrase: "Synthetic rate A", url: "https://example.com/rate-a" }
+  - { phrase: "Synthetic price B", url: "https://example.com/price-b" }
+  - { phrase: "Synthetic auto F", url: "https://example.com/auto-f" }
+  - { phrase: "Synthetic index C", url: "https://example.com/index-c" }
+  - { phrase: "Synthetic count D", url: "https://example.com/count-d" }
+  - { phrase: "Synthetic level E", url: "https://example.com/level-e" }
+  - { phrase: "Synthetic change-only G", url: "https://example.com/change-g" }

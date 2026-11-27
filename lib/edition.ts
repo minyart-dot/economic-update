@@ -1,6 +1,12 @@
 // Builds the render-ready Edition from the seed JSON + configs + history.
-// This is the computation that scripts/build-edition.ts (Phase 3) will freeze into the
-// edition snapshot: y/y changes, direction, color, correlations, alert and references.
+// scripts/build-edition.ts freezes the same computation into the edition snapshot (spec 10.2):
+// y/y changes, direction, color, polarity, comparison basis, source, as-of, plus correlations and alert.
+//
+// Frozen vs. seed editions: this loader accepts both formats and ALWAYS recomputes the computed
+// fields from the inputs (value, year_ago, change_reported, config). Frozen copies in the JSON are
+// ignored here, so a hand edit to a value can never leave a stale arrow or color on the page.
+// scripts/validate-edition.ts fails any edition whose frozen fields disagree with this recomputation,
+// so the snapshot on disk and the rendered page stay consistent.
 
 import { buildAlert } from "./alert";
 import { computeCorrelations } from "./analytics";

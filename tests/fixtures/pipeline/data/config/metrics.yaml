@@ -1,0 +1,69 @@
+# SYNTHETIC test fixture: an invented metric registry for tests/pipeline tests.
+# Every metric, number and URL under tests/fixtures/pipeline/ is made up (editions 2030-01 and 2030-02,
+# example.com sources). None of it is real data and none of it is used by the website.
+defaults:
+  max_age_days: { daily: 7, weekly: 14, monthly: 45, quarterly: 120, annual: 400, snapshot: 45 }
+
+metrics:
+  rate_a:
+    label: Synthetic rate A
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    required: true
+    source_name: Example API
+    source_url: https://example.com/rate-a
+  price_b:
+    label: Synthetic price B
+    unit: usd
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    source_name: Example API
+    source_url: https://example.com/price-b
+  auto_f:
+    label: Synthetic auto F
+    unit: index
+    polarity: higher_is_good
+    automation: AUTO
+    frequency: monthly
+    source_name: Example API
+    source_url: https://example.com/auto-f
+  index_c:
+    label: Synthetic index C
+    unit: index
+    decimals: 0
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: monthly
+    required: true
+    source_name: Example survey
+    source_url: https://example.com/index-c
+  count_d:
+    label: Synthetic count D
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: Example report
+    source_url: https://example.com/count-d
+  level_e:
+    label: Synthetic level E
+    unit: pct
+    decimals: 1
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: quarterly
+    required: true
+    source_name: Example quarterly
+    source_url: https://example.com/level-e
+  change_g:
+    label: Synthetic change-only G
+    unit: usd
+    polarity: lower_is_good
+    automation: SEMI
+    frequency: monthly
+    source_name: Example download
+    source_url: https://example.com/change-g

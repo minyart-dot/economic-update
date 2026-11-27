@@ -61,6 +61,26 @@ Rules the code enforces (spec Section 5):
 
 Never estimate a value. If it is missing, use `null`; the page shows "—".
 
+## Edition pipeline commands (Phase 3)
+
+```bash
+npm run manual-template -- 2026-12          # writes data/manual/2026-12.yaml (never overwrites); owner fills it in
+npm run build:edition -- 2026-12 --draft    # preview build: stale required values only warn
+npm run build:edition -- 2026-12            # final build: fails while a required manual value is stale
+npm run validate -- 2026-12 --report out/validation-2026-12.md [--draft-summary path.md] [--check-links]
+npm test
+```
+
+- `build:edition` merges the previous edition (structure and text) + `data/raw/YYYY-MM/auto.json` + `data/manual/YYYY-MM.yaml`
+  into `data/editions/YYYY-MM.json` with `status: "draft"`, freezing each metric record per spec 10.2. Narrative and
+  table text is copied from the previous edition and printed as NEEDS REVIEW (also stored under `build.needs_review`).
+  It refuses to overwrite a "ready" or "published" edition (`--out` writes elsewhere).
+- Frozen vs. seed editions: `lib/edition.ts` always recomputes changes, arrows and colors from the inputs; the
+  validator fails an edition whose frozen fields disagree, so the file and the page cannot drift apart.
+- `validate` implements spec 14.3 and exits 1 on any FAIL. Allow-listed banned-word matches (the "no forecast"
+  disclaimer, the VIX definition) are listed with their reason in the report. Optional per-metric `max_age_days`
+  and `typical_move` in `metrics.yaml` tune the freshness and large-move warnings.
+
 ## Going live (one-time setup, about 20 minutes)
 
 The site is public, free and needs no login. Two free accounts make it live:
