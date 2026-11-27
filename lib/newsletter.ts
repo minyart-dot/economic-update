@@ -24,11 +24,17 @@ export interface Newsletter {
   html: string;
   text: string;
   editionUrl: string;
+  pdfUrl: string | null;
 }
 
-export function buildNewsletter(ed: Edition, siteUrl: string): Newsletter {
+/**
+ * @param pdfPath site-relative path of the rendered PDF (e.g. "/editions/2026-11.pdf"), or null
+ *                when there is none; the email then leaves out the PDF link (spec 13.3 item 6).
+ */
+export function buildNewsletter(ed: Edition, siteUrl: string, pdfPath: string | null = null): Newsletter {
   const base = siteUrl.replace(/\/$/, "");
   const editionUrl = `${base}/archive/${ed.edition}`;
+  const pdfUrl = pdfPath ? `${base}${pdfPath}` : null;
   const subject = `State of the Market, ${ed.edition_label}: ${ed.headline_summary}`;
   const preheader = ed.month_in_brief.split(/(?<=\.)\s/)[0];
   const alertLine = ed.alert.text + (ed.alert.inverted && ed.alert.inversion_text ? ` · ${ed.alert.inversion_text}` : "");
@@ -85,7 +91,9 @@ export function buildNewsletter(ed: Edition, siteUrl: string): Newsletter {
   </td></tr>
   <tr><td align="center" style="padding:20px 4px 8px">
     <a href="${esc(editionUrl)}" style="display:inline-block;background:${COLOR.teal};color:#ffffff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:6px">Read the full brief</a>
-    <div style="font-size:12px;color:${COLOR.muted};padding-top:6px">Charts, tables and a source link for every number.</div>
+    <div style="font-size:12px;color:${COLOR.muted};padding-top:6px">Charts, tables and a source link for every number.${
+      pdfUrl ? ` Or <a href="${esc(pdfUrl)}" style="color:${COLOR.teal}">download the PDF</a>.` : ""
+    }</div>
   </td></tr>
   <tr><td style="padding:8px 4px"><div style="background:${COLOR.navy};color:#ffffff;font-size:13px;padding:8px 12px;border-radius:4px"><strong style="color:#9FB4CC">NEXT MONTH:</strong> ${esc(next)}</div></td></tr>
   <tr><td style="padding:14px 4px 4px;font-size:12px;color:${COLOR.muted};border-top:1px solid ${COLOR.border}">
@@ -112,6 +120,7 @@ export function buildNewsletter(ed: Edition, siteUrl: string): Newsletter {
     ...cards.map(({ c, m, value, fact }) => `- ${c.asset}: ${value}${arrowText(m)} · ${fact}`),
     "",
     `Read the full brief: ${editionUrl}`,
+    ...(pdfUrl ? [`PDF: ${pdfUrl}`] : []),
     "",
     `Next month: ${next}`,
     "",
@@ -119,5 +128,5 @@ export function buildNewsletter(ed: Edition, siteUrl: string): Newsletter {
     "Unsubscribe: {{ unsubscribe_url }}",
   ].join("\n");
 
-  return { subject, preheader, html, text, editionUrl };
+  return { subject, preheader, html, text, editionUrl, pdfUrl };
 }

@@ -8,6 +8,10 @@
 //
 // Idempotent: refuses to send an edition whose JSON already has newsletter_sent_at.
 // Needs BUTTONDOWN_API_KEY (except --preview) and SITE_URL.
+//
+// PDF link: included when public/editions/YYYY-MM.pdf exists (npm run pdf). With --send --wait the
+// link is kept only if that PDF is also live on SITE_URL within a few minutes; otherwise the email
+// goes out without it (a missing PDF never blocks the email).
 
 import fs from "node:fs";
 import path from "node:path";
@@ -15,6 +19,7 @@ import { createEmail } from "../lib/buttondown";
 import { listEditions, loadEditionSeed } from "../lib/data";
 import { getEdition } from "../lib/edition";
 import { buildNewsletter } from "../lib/newsletter";
+import { pdfHref } from "../lib/pdf";
 
 const args = process.argv.slice(2);
 const flag = (f: string) => args.includes(f);
@@ -48,7 +53,17 @@ async function main() {
   }
   if (mode === "send" && !process.env.SITE_URL) throw new Error("SITE_URL must be set to send (links would point to localhost)");
 
-  const nl = buildNewsletter(getEdition(id), siteUrl);
+  let pdf = pdfHref(id);
+  if (pdf && flag("--wait") && mode === "send") {
+    const pdfUrl = `${siteUrl.replace(/\/$/, "")}${pdf}`;
+    try {
+      await waitForPage(pdfUrl, 6);
+    } catch {
+      console.warn(`::warning::${pdfUrl} is not live yet; sending without the PDF link.`);
+      pdf = null;
+    }
+  }
+  const nl = buildNewsletter(getEdition(id), siteUrl, pdf);
   fs.mkdirSync("out", { recursive: true });
   fs.writeFileSync(`out/newsletter-${id}.html`, nl.html);
   fs.writeFileSync(`out/newsletter-${id}.txt`, nl.text);
