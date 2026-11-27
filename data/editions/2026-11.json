@@ -1,0 +1,433 @@
+{
+  "edition": "2026-11",
+  "edition_label": "November 2026",
+  "status": "published",
+  "published_at": "2026-11-21",
+  "data_as_of": "2026-11-20",
+  "data_as_of_label": "Nov 20, 2026",
+  "headline_summary": "Home sales at 16-year low; VIX elevated",
+
+  "month_in_brief": "Unemployment is low at 4.1%; mortgage rates near 7.3% coincide with the slowest home sales since 2010 and supply of 5.1 months. Builder confidence, flipping returns and permits are down, nationally and in Texas. Apartment rents are flat nationally and lower in Texas metros. Office and industrial vacancy are off their peaks. Household credit is split: card stress is easing, auto and overall delinquency are rising, and foreclosures are up from low levels.",
+
+  "big_picture": "Jobs are still solid by historical standards, but borrowing costs are high and existing-home sales are at a 16-year low. Builders are pulling back on new permits, especially in Texas. Household credit is split: credit card losses are easing, while auto and overall delinquency, bankruptcies and foreclosures are rising from low levels.",
+
+  "metrics": {
+    "unemployment": { "value": 4.1, "period": "2026-10", "period_label": "Oct", "year_ago": 4.4, "year_ago_period": "2025-09", "year_ago_label": "Sep 2025", "year_ago_footnote_mark": true, "footnote": "*Oct 2025 unemployment not collected (shutdown); Sep 2025 used.", "ref_2019": "3.6% (Dec)" },
+    "initial_claims": { "value": 203000, "period": "2026-11", "period_label": "latest week", "year_ago": 222000, "year_ago_period": "2025-11", "ref_2019": "~218,000 avg", "source_url": "https://fred.stlouisfed.org/series/ICSA" },
+    "continuing_claims": { "value": 1.763, "period": "2026-11", "period_label": "latest week", "year_ago": 1.949, "year_ago_period": "2025-11", "ref_2019": "~1.68M avg" },
+    "job_openings": { "value": 7.5, "display": "7.5M", "period": "2026-09", "period_label": "Sep", "year_ago": 7.2, "year_ago_display": "7.2M", "year_ago_period": "2025-09", "ref_2019": "6.7M (Dec)" },
+    "payrolls_change": { "value": 165000, "display": "+165,000", "period": "2026-10", "period_label": "Oct", "year_ago": null, "notes": "Prior 12-month average 48,000." },
+    "avg_weeks_unemployed": { "value": 27.1, "display": "27.1 weeks", "period": "2026-10", "period_label": "Oct", "year_ago": null },
+    "recent_grad_unemployment": { "value": 5.6, "period": "2026-Q2", "period_label": "Q2", "year_ago": null },
+
+    "cpi_yoy": { "value": 3.7, "period": "2026-09", "period_label": "Sep", "year_ago": 3.0, "year_ago_period": "2025-09", "ref_2019": "2.3% (Dec)", "notes": "No October 2026 12-month rate was published (2025 shutdown). October rose 0.4% m/m." },
+    "core_cpi_yoy": { "value": 2.6, "period": "2026-09", "period_label": "Sep", "year_ago": null },
+    "energy_cpi_yoy": { "value": 20.4, "display": "+20.4%", "period": "2026-09", "period_label": "Sep", "year_ago": null },
+    "fed_funds": { "value": 3.875, "display": "3.75–4.00%", "period": "2026-11-20", "period_label": "Nov 20", "year_ago": 3.875, "year_ago_display": "3.75–4.00%", "year_ago_period": "2025-11", "ref_2019": "1.50–1.75%", "notes": "Cut late 2025, hiked Sep 2026." },
+    "mortgage30": { "value": 7.28, "period": "2026-11-19", "period_label": "Nov 19", "year_ago": 6.26, "year_ago_period": "2025-11-20", "ref_2019": "3.94% avg" },
+    "treasury10": { "value": 4.94, "period": "2026-11-20", "period_label": "Nov 20", "year_ago": null, "notes": "Oct 5 close 5.31% was a 24-year closing high." },
+    "junk_spread": { "value": 3.52, "period": "2026-11", "period_label": "Nov", "year_ago": 3.17, "year_ago_period": "2025-11", "ref_2019": "3.60 pts" },
+    "yield_curve": { "value": 0.30, "period": "2026-11-17", "period_label": "Nov 17", "year_ago": 0.55, "year_ago_period": "2025-11", "source_name": "Treasury yields via AllInvestView", "source_url": "https://www.allinvestview.com/yield-curve/" },
+    "vix": { "value": 24.52, "period": "2026-11-18", "period_label": "Nov 18", "year_ago": null, "source_name": "Cboe VIX close", "source_url": "https://www.ad-hoc-news.de/boerse/news/marktberichte/vix-ends-november-18-at-24-52-down-3-69-percent/70533036", "notes": "Nov 5 close 28.18 (+69.7% in a day); 2026 YTD average 18.16; 20-year average 19.45." },
+    "dxy": { "value": 103.65, "display": "~103.7", "period": "2026-11-19", "period_label": "Nov 19", "year_ago": 100.18, "year_ago_display": "100.2", "year_ago_period": "2025-11-21", "notes": "Intraday high 103.97 (19-month high)." },
+    "fed_hike_odds": { "value": 90, "display": ">90%", "period": "2026-11-17", "period_label": "Nov 17", "year_ago": null },
+    "consumer_sentiment": { "value": 51.0, "period": "2026-11", "period_label": "Nov, prelim.", "year_ago": 51.0, "year_ago_period": "2025-11", "ref_2019": "~96 avg" },
+
+    "existing_home_sales": { "value": 3.75, "display": "3.75M", "period": "2026-10", "period_label": "Oct", "year_ago": 4.11, "year_ago_display": "4.11M", "year_ago_revised": true, "year_ago_period": "2025-10", "ref_2019": "5.46M (Oct)" },
+    "median_existing_price": { "value": 416700, "period": "2026-10", "period_label": "Oct", "year_ago": 414900, "year_ago_period": "2025-10", "ref_2019": "$270,900" },
+    "months_inventory_us": { "value": 5.1, "period": "2026-10", "period_label": "Oct", "year_ago": 4.4, "year_ago_period": "2025-10", "ref_2019": "—" },
+    "pending_home_sales_index": { "value": 63.0, "period": "2026-10", "period_label": "latest release", "year_ago": null, "notes": "A record low." },
+    "builder_confidence": { "value": 25, "period": "2026-11", "period_label": "Nov", "year_ago": 38, "year_ago_period": "2025-11", "notes": "Lowest since April 2012." },
+    "builders_cutting_prices": { "value": 46, "period": "2026-11", "period_label": "Nov", "year_ago": null, "notes": "Average cut 6%; 68% used incentives." },
+    "permits_us": { "value": 1.295, "display": "1.295M", "period": "2026-10", "period_label": "Oct", "year_ago": 1.418, "year_ago_display": "1.418M", "year_ago_revised": true, "year_ago_period": "2025-10", "ref_2019": "1.386M (year)", "notes": "Census revised October 2025 from 1.412M to 1.418M." },
+    "permits_us_single_family": { "value": 772000, "period": "2026-10", "period_label": "Oct", "year_ago": null, "change_reported": { "pct": -12.9 } },
+    "permits_texas_ytd": { "value": 147854, "period": "2026-01/2026-09", "period_label": "Jan–Sep", "year_ago": 163525, "year_ago_period": "2025-01/2025-09", "ref_2019": "199,600 (year)", "notes": "Not seasonally adjusted." },
+    "mh_production_ytd": { "value": 58885, "period": "2026-01/2026-08", "period_label": "Jan–Aug", "year_ago": 62053, "year_ago_period": "2025-01/2025-08", "ref_2019": "94,633 (year)" },
+    "mh_avg_new_price": { "value": 129400, "period": "2026-06", "period_label": "Jun", "year_ago": null, "ref_2019": "$84,400 (Jun 2019)" },
+    "mortgage_delinquency": { "value": 4.42, "period": "2026-Q3", "period_label": "Q3", "year_ago": null, "change_reported": { "points": 0.43 } },
+    "fha_foreclosure_rate": { "value": 1.89, "period": "2026-Q3", "period_label": "Q3", "year_ago": null, "notes": "Highest since 2017." },
+    "flip_gross_roi": { "value": 21.5, "period": "2026-Q2", "period_label": "Q2", "year_ago": 27.6, "year_ago_period": "2025-Q2" },
+    "flip_gross_profit": { "value": 60526, "period": "2026-Q2", "period_label": "Q2", "year_ago": 71000, "year_ago_period": "2025-Q2" },
+    "flip_rate": { "value": 6.2, "period": "2026-Q2", "period_label": "Q2", "year_ago": 7.3, "year_ago_period": "2025-Q2" },
+    "us_median_rent": { "value": 1384, "period": "2026-10", "period_label": "Oct", "year_ago": null, "change_reported": { "pct": 0.1 } },
+    "us_apartment_occupancy": { "value": 95.4, "period": "2026-Q3", "period_label": "Q3", "year_ago": null },
+
+    "office_vacancy_cbre": { "value": 18.2, "period": "2026-Q3", "period_label": "Q3", "year_ago": 18.8, "year_ago_period": "2025-Q3", "notes": "5th straight quarterly decline; firms range 17.2–21.5%." },
+    "office_vacancy_yardi": { "value": 17.8, "period": "2026-09", "period_label": "Sep", "year_ago": null, "change_reported": { "points": -0.8 } },
+    "office_vacancy_moodys": { "value": 20.7, "period": "2025", "period_label": "2025", "year_ago": 20.3, "year_ago_period": "2024" },
+    "industrial_vacancy_cw": { "value": 6.8, "period": "2026-Q3", "period_label": "Q3", "year_ago": null, "year_ago_display": "n/a (peak 7.0%, late 2025)", "ref_2019": "—" },
+    "retail_vacancy_colliers": { "value": 4.3, "period": "2026-Q3", "period_label": "Q3", "year_ago": null, "notes": "Malls 8.2%." },
+    "office_occupancy_kastle": { "value": 56, "display": "~56%", "period": "2026-11", "period_label": "latest week", "year_ago": null, "ref_2019": "100% baseline", "notes": "10-city average vs. pre-2020; Tuesday peak ~67%." },
+
+    "bankruptcies_ytd": { "value": 523747, "period": "2026-01/2026-10", "period_label": "Jan–Oct", "year_ago": 476201, "year_ago_period": "2025-01/2025-10", "ref_2019": "774,940 (year)", "notes": "2025–26 from Epiq; 2019 from U.S. Courts." },
+    "card_chargeoff": { "value": 3.82, "period": "2026-Q2", "period_label": "Q2", "year_ago": 4.19, "year_ago_period": "2025-Q2", "ref_2019": "3.78% (Q4)" },
+    "hh_debt_delinquent": { "value": 4.96, "period": "2026-Q3", "period_label": "Q3", "year_ago": 4.48, "year_ago_period": "2025-Q3", "ref_2019": "—", "notes": "Highest since Q1 2016." },
+    "subprime_auto_60": { "value": 6.27, "period": "2026-07", "period_label": "restated", "year_ago": 6.46, "year_ago_period": "2025", "ref_2019": "5.93% (Aug)", "notes": "Fitch restated the index in July 2026." },
+    "foreclosure_filings_h1": { "value": 227548, "period": "2026-H1", "period_label": "H1", "year_ago": null, "change_reported": { "pct": 21 } },
+    "foreclosure_starts_h1": { "value": 164566, "period": "2026-H1", "period_label": "H1", "year_ago": null, "change_reported": { "pct": 18 } },
+
+    "job_cuts_ytd": { "value": 617189, "period": "2026-01/2026-10", "period_label": "Jan–Oct", "year_ago": null, "change_reported": { "pct": -44 } },
+    "ai_cited_cuts_month": { "value": 1265, "period": "2026-10", "period_label": "Oct", "year_ago": 31039, "year_ago_period": "2025-10" },
+    "big_tech_capex": { "value": 720, "display": ">$720B", "period": "2026", "period_label": "2026 plan", "year_ago": 410, "year_ago_display": "~$410B", "year_ago_period": "2025", "ref_2019": "n/a" },
+
+    "texas_median_price": { "value": 325000, "period": "2026-10", "period_label": "Oct", "year_ago": null, "change_reported": { "pct": -3, "approx": true } },
+    "texas_months_inventory": { "value": 5.5, "period": "2026-Q3", "period_label": "Q3", "year_ago": 5.4, "year_ago_period": "2025-Q3" },
+    "texas_land_price_acre": { "value": 5218, "period": "2026-Q2", "period_label": "Q2, 4-qtr avg", "year_ago": null, "change_reported": { "pct": 3.3 } },
+    "tx_foreclosure_starts_h1": { "value": 20739, "period": "2026-H1", "period_label": "Jan–Jun", "year_ago": null, "change_reported": { "pct": 17 } },
+    "tx_personal_bankruptcies": { "value": 33979, "period": "2025", "period_label": "2025", "year_ago": null, "change_reported": { "pct": 19.9 } },
+    "tx_mh_titled": { "value": 11976, "period": "2026-01/2026-09", "period_label": "Jan–Sep", "year_ago": null },
+
+    "euro_unemployment": { "value": 6.5, "period": "2026-09", "period_label": "Sep", "year_ago": null, "notes": "Up from 6.3%." },
+    "eu_youth_unemployment": { "value": 15.5, "period": "2026-09", "period_label": "Sep", "year_ago": null },
+    "uk_unemployment": { "value": 4.6, "period": "2026-Q3", "period_label": "Q3", "year_ago": null, "notes": "Down from 4.9%." }
+  },
+
+  "tiles": {
+    "headline": [
+      { "metric": "mortgage30", "label": "30-yr mortgage", "sub": "Nov 19 · year ago 6.26%", "tone": "teal" },
+      { "metric": "unemployment", "label": "Unemployment", "sub": "Oct · Sep 2025: 4.4%*", "tone": "orange" },
+      { "metric": "cpi_yoy", "label": "Inflation (CPI)", "sub": "Sep · core 2.6% · year ago 3.0%", "tone": "navy" },
+      { "metric": "builder_confidence", "label": "Builder confidence", "sub": "Nov · lowest since 2012", "tone": "teal" }
+    ],
+    "rates": [
+      { "metric": "treasury10", "label": "10-year Treasury", "sub": "Nov 20 · Oct 5 close 5.31% was a 24-yr high", "tone": "teal" },
+      { "metric": "fed_funds", "label": "Fed funds", "sub": "Same as a year ago · cut late 2025, hiked Sep 2026", "tone": "navy" },
+      { "metric": "big_tech_capex", "label": "Big Tech capex", "sub": "2026 plans vs. ~$410B in 2025", "tone": "orange" }
+    ],
+    "gauges": [
+      { "metric": "yield_curve", "label": "Yield curve (10-yr − 2-yr)", "sub": "Nov 17 · year ago +0.55 · 20-yr avg +1.00", "tone": "teal" },
+      { "metric": "vix", "label": "VIX volatility index", "sub": "Nov 18 · 2026 avg 18.2 · 20-yr avg 19.4", "tone": "orange" },
+      { "metric": "dxy", "label": "Dollar index (DXY)", "sub": "Nov 19 · year ago 100.2, +3.5%", "tone": "navy" }
+    ],
+    "cre": [
+      { "metric": "office_occupancy_kastle", "label": "Office occupancy", "sub": "Kastle 10-city avg vs. pre-2020 · Tuesday peak ~67%", "tone": "teal" },
+      { "metric": "office_vacancy_cbre", "label": "Office vacancy", "sub": "CBRE Q3 · −0.6 pts y/y · firms range 17.2–21.5%", "tone": "navy" },
+      { "metric": "retail_vacancy_colliers", "label": "Retail vacancy", "sub": "Colliers Q3 · malls 8.2%", "tone": "orange" }
+    ],
+    "texas": [
+      { "metric": "tx_foreclosure_starts_h1", "label": "Foreclosure starts", "sub": "Jan–Jun 2026, +17% · most of any state", "tone": "teal" },
+      { "metric": "tx_personal_bankruptcies", "label": "Personal bankruptcies", "sub": "2025, +19.9%", "tone": "orange" },
+      { "metric": "permits_texas_ytd", "label": "Permits Jan–Sep", "sub": "−9.6% vs. 2025", "tone": "navy" }
+    ]
+  },
+
+  "asset_cards": [
+    {
+      "asset": "Houses · buy & hold", "metric": "median_existing_price", "metric_label": "Median existing-home price",
+      "bullets": [
+        { "text": "+0.4% vs. Oct 2025; sales 3.75M annual pace, lowest since 2010", "links": [{ "phrase": "3.75M annual pace", "url": "https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report" }] },
+        { "text": "5.1 months of supply, highest since 2015", "links": [{ "phrase": "highest since 2015", "url": "https://eyeonhousing.org/2026/11/existing-home-sales-fell-to-16-year-low/" }] },
+        { "text": "Texas: Oct median $325,000, down ~3%; Q3 supply 5.5 months", "links": [{ "phrase": "$325,000", "url": "https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales" }, { "phrase": "5.5 months", "url": "https://www.webull.com/news/15780751986238464" }] }
+      ]
+    },
+    {
+      "asset": "House flipping", "metric": "flip_gross_roi", "metric_label": "Typical gross ROI (Q2; ATTOM calls it ROI)",
+      "bullets": [
+        { "text": "27.6% in Q2 2025; gross profit $60,526 (vs. $71,000)", "links": [{ "phrase": "gross profit $60,526", "url": "https://www.attomdata.com/news/market-trends/flipping/home-flipping-profits-continue-gradual-two-year-decline/" }] },
+        { "text": "Flips 6.2% of all sales vs. 7.3% in Q2 2025", "links": [{ "phrase": "Flips 6.2%", "url": "https://www.webull.com/news/15673816770479104" }] }
+      ]
+    },
+    {
+      "asset": "New construction", "metric": "builder_confidence", "metric_label": "Builder confidence (Nov)",
+      "bullets": [
+        { "text": "38 a year ago; 46% of builders cut prices, avg 6%", "links": [{ "phrase": "46% of builders", "url": "https://www.nahb.org/news-and-economics/press-releases/2026/11/builder-sentiment-continues-to-fall-on-affordability-concerns" }] },
+        { "text": "Single-family permits 772,000 pace, −12.9% y/y", "links": [{ "phrase": "772,000 pace", "url": "https://www.nahb.org/news-and-economics/press-releases/2026/11/single-family-starts-post-modest-rebound-amid-challenging-conditions" }] }
+      ]
+    },
+    {
+      "asset": "Land · Texas rural", "metric": "texas_land_price_acre", "metric_label": "Median price per acre (Q2, 4-qtr avg)",
+      "bullets": [
+        { "text": "+3.3% vs. Q2 2025; number of sales up; acres sold and dollar volume down", "links": [{ "phrase": "+3.3% vs. Q2 2025", "url": "https://texashuntingland.com/blog/texas-rural-land-market-data" }] },
+        { "text": "DFW-area MLS land listings: 21.9 months supply", "links": [{ "phrase": "21.9 months", "url": "https://www.mymetrotex.com/wp-content/uploads/2026/10/NTREIS-Monthly-MLS-Summary-Report-202609.pdf" }] }
+      ]
+    },
+    {
+      "asset": "Rentals · multifamily", "metric": "us_median_rent", "metric_label": "U.S. median rent (Oct)",
+      "bullets": [
+        { "text": "+0.1% y/y; Texas metros −1.2% to −3.8%", "links": [{ "phrase": "Texas metros −1.2% to −3.8%", "url": "https://www.apartmentlist.com/renter-life/where-rents-are-falling" }] },
+        { "text": "U.S. occupancy 95.4% (Q3)", "links": [{ "phrase": "U.S. occupancy 95.4%", "url": "https://www.credaily.com/?p=223707" }] }
+      ]
+    },
+    {
+      "asset": "Manufactured homes", "metric": "mh_production_ytd", "metric_label": "Production, Jan–Aug 2026",
+      "bullets": [
+        { "text": "−5.1% vs. Jan–Aug 2025; 2025 total ~103,000, flat", "links": [{ "phrase": "−5.1% vs. Jan–Aug 2025", "url": "https://www.manufacturedhomepronews.com/mharr-v-mhi-dueling-aug-2026-report-on-new-hud-code-manufactured-housing-industry-data-what-the-latest-key-performance-indicators-kpis-revealed-celebrate-hold-kpi-ignore-crooked-e-fea/" }] },
+        { "text": "Avg. new price $129,400 (Jun) vs. $84,400 (Jun 2019)", "links": [{ "phrase": "$129,400", "url": "https://fred.stlouisfed.org/series/SPTNSAUS" }, { "phrase": "$84,400 (Jun 2019)", "url": "https://fred.stlouisfed.org/data/SPTNSAUS" }] }
+      ]
+    },
+    {
+      "asset": "Office", "metric": "office_vacancy_cbre", "metric_label": "National vacancy (Q3, CBRE)",
+      "bullets": [
+        { "text": "−0.6 pts y/y, 5th straight quarterly drop; badge-ins ~56% of 2019", "links": [{ "phrase": "−0.6 pts y/y", "url": "https://www.cbre.com/insights/figures/q3-2026-us-office-market-report" }, { "phrase": "badge-ins ~56% of 2019", "url": "https://www.kastle.com/safety-wellness/getting-america-back-to-work/" }] },
+        { "text": "Dallas–FW 24.6% (CBRE); Houston 25.6% (Newmark)", "links": [{ "phrase": "24.6% (CBRE)", "url": "https://www.credaily.com/?p=223979" }, { "phrase": "25.6% (Newmark)", "url": "https://www.credaily.com/?p=224274" }] }
+      ]
+    },
+    {
+      "asset": "Industrial & retail", "metric": "industrial_vacancy_cw", "metric_label": "Industrial vacancy (Q3, C&W)",
+      "bullets": [
+        { "text": "Off 7.0% late-2025 peak; DFW 7.8% vs. 8.9% y/y (CBRE)", "links": [{ "phrase": "Off 7.0% late-2025 peak", "url": "https://www.cushmanwakefield.com/en/united-states/insights/us-marketbeats" }, { "phrase": "DFW 7.8% vs. 8.9% y/y (CBRE)", "url": "https://www.cbre.com/insights/figures/dallas-fort-worth-industrial-figures-q3-2026" }] },
+        { "text": "Pipeline +23% y/y; retail vacancy 4.3%, malls 8.2%", "links": [{ "phrase": "Pipeline +23% y/y", "url": "https://www.cushmanwakefield.com/en/united-states/insights/us-marketbeats/us-industrial-marketbeat" }, { "phrase": "retail vacancy 4.3%", "url": "https://www.colliers.com/en/research" }] }
+      ]
+    },
+    {
+      "asset": "Distressed & foreclosure", "metric": "foreclosure_filings_h1", "metric_label": "Foreclosure filings, H1 2026 vs. H1 2025", "value_display": "+21%",
+      "bullets": [
+        { "text": "Starts +18%, repossessions +33%; Aug 2026 filings +13% y/y", "links": [{ "phrase": "Starts +18%", "url": "https://www.housingwire.com/articles/us-foreclosures-rise-2026-midyear-attom-report/" }, { "phrase": "Aug 2026 filings +13%", "url": "https://www.attomdata.com/hnr/2026-q3-housing-news-report/" }] },
+        { "text": "Texas led states in H1 starts; far below 2010", "links": [{ "phrase": "Texas led states in H1 starts", "url": "https://www.attomdata.com/?p=42129" }, { "phrase": "far below 2010", "url": "https://www.calculatedriskblog.com/2010/01/realtytrac-2009-was-record-year-for.html" }] }
+      ]
+    }
+  ],
+
+  "next_month": [
+    { "label": "Fed", "date": "Dec 8–9" },
+    { "label": "CPI", "date": "Dec 10" },
+    { "label": "Permits", "date": "Dec 17" },
+    { "label": "Builder confidence", "date": "mid-Dec" },
+    { "label": "Q4 office/industrial", "date": "early Jan" }
+  ],
+
+  "notes": {
+    "comparisons": "Arrows show direction vs. a year ago (▲ ▼ ▶). Color shows how the change is generally read: green favorable, red unfavorable, black flat or mixed (e.g., higher prices help owners but hurt buyers). Data only; no forecast. *Oct 2025 unemployment not collected (shutdown); Sep 2025 used.",
+    "key_indicators": "Arrows compare the latest reading with the same period one year earlier (y/y); the '2019' column is a separate pre-pandemic reference and is not used for the arrow. Color: green = generally read as favorable for the broad economy, red = generally read as unfavorable, black = flat or mixed. *October 2025 unemployment was not collected (government shutdown). Bankruptcies 2025–26 from Epiq; 2019 from U.S. Courts. Texas permits are not seasonally adjusted.",
+    "correlations": "Correlation runs from −1 to +1; it shows that two series moved together, not that one caused the other. Only 20 annual data points; the card charge-off figure excludes 2020–21 pandemic years. The next-year relationship uses 18 pairs of years.",
+    "inventory": "Land and commercial turn over far more slowly than homes, so compare them with their own history. Statewide land months of inventory is not published. Medians shift with the mix of properties sold, and land and commercial rest on small samples.",
+    "tx_metros": "Sources: Census building permits via FRED (metro, not seasonally adjusted); Apartment List Rent Index; Yardi Matrix office vacancy.",
+    "vix_rule": "The banner uses the latest VIX close. Below 20: normal. 20–29.99: elevated, the level commonly watched as a sign of heightened uncertainty. 30–39.99: high alert, a level historically associated with market stress. 40 and above: extreme, historically seen only in acute crises (2008, 2020). A separate flag appears when the 10-yr minus 2-yr Treasury spread is below zero (inverted).",
+    "c1_caption": "Annual averages. Sources: BLS via FRED (UNRATE); Freddie Mac PMMS via FRED (MORTGAGE30US). Shaded: 2008–09 recession, 2020 pandemic.",
+    "c2_caption": "Sources: RealtyTrac/ATTOM year-end reports (2014, 2021 and 2024 derived from reported % changes); U.S. Courts (2007–08 are fiscal years).",
+    "c6_caption": "Fitch restated the index in July 2026; earlier bars are pre-restatement and not directly comparable.",
+    "c8_caption": "MHI shipments 2006–2024; MHARR production 2025. The two series are not identical.",
+    "c17_caption": "Annual averages, 2006 to 2026 YTD. The 20-year dollar panel uses the Fed broad trade-weighted index (26 currencies), which differs from the six-currency DXY."
+  },
+
+  "tables": {
+    "key_indicators": [
+      { "area": "Labor", "metric": "unemployment", "latest": "4.1% (Oct)", "year_ago": "4.4% (Sep 2025)*", "ref_2019": "3.6% (Dec)" },
+      { "area": "Labor", "metric": "initial_claims", "latest": "203,000", "year_ago": "222,000", "ref_2019": "~218,000 avg" },
+      { "area": "Labor", "metric": "continuing_claims", "latest": "1.763M", "year_ago": "1.949M", "ref_2019": "~1.68M avg" },
+      { "area": "Labor", "metric": "job_openings", "latest": "7.5M (Sep)", "year_ago": "7.2M", "ref_2019": "6.7M (Dec)" },
+      { "area": "Prices & rates", "metric": "cpi_yoy", "latest": "3.7% (Sep)", "year_ago": "3.0%", "ref_2019": "2.3% (Dec)" },
+      { "area": "Prices & rates", "metric": "fed_funds", "latest": "3.75–4.00%", "year_ago": "3.75–4.00%", "ref_2019": "1.50–1.75%" },
+      { "area": "Prices & rates", "metric": "mortgage30", "latest": "7.28% (Nov 19)", "year_ago": "6.26%", "ref_2019": "3.94% avg" },
+      { "area": "Prices & rates", "metric": "junk_spread", "latest": "3.52 pts", "year_ago": "3.17 pts", "ref_2019": "3.60 pts" },
+      { "area": "Housing", "metric": "existing_home_sales", "latest": "3.75M (Oct)", "year_ago": "4.11M (rev.)", "ref_2019": "5.46M (Oct)" },
+      { "area": "Housing", "metric": "median_existing_price", "latest": "$416,700", "year_ago": "$414,900", "ref_2019": "$270,900" },
+      { "area": "Housing", "metric": "months_inventory_us", "latest": "5.1 (Oct)", "year_ago": "4.4", "ref_2019": "—" },
+      { "area": "Housing", "metric": "permits_us", "latest": "1.295M (Oct)", "year_ago": "1.418M (Oct 2025, rev.)", "ref_2019": "1.386M (year)" },
+      { "area": "Housing", "metric": "permits_texas_ytd", "label": "Building permits, Texas (Jan–Sep)", "latest": "147,854", "year_ago": "163,525", "ref_2019": "199,600 (year)" },
+      { "area": "Housing", "metric": "mh_production_ytd", "label": "Manufactured home production", "latest": "58,885 (Jan–Aug)", "year_ago": "62,053", "ref_2019": "94,633 (year)" },
+      { "area": "Commercial", "metric": "office_vacancy_cbre", "latest": "18.2% (Q3)", "year_ago": "18.8%", "ref_2019": "—" },
+      { "area": "Commercial", "metric": "industrial_vacancy_cw", "latest": "6.8% (Q3)", "year_ago": "n/a (peak 7.0%, late 2025)", "ref_2019": "—" },
+      { "area": "Commercial", "metric": "office_occupancy_kastle", "latest": "~56%", "year_ago": "—", "ref_2019": "100% baseline" },
+      { "area": "Household credit", "metric": "bankruptcies_ytd", "label": "Bankruptcy filings, Jan–Oct", "latest": "523,747", "year_ago": "476,201", "ref_2019": "774,940 (year)" },
+      { "area": "Household credit", "metric": "card_chargeoff", "latest": "3.82% (Q2)", "year_ago": "4.19%", "ref_2019": "3.78% (Q4)" },
+      { "area": "Household credit", "metric": "hh_debt_delinquent", "latest": "4.96% (Q3)", "year_ago": "4.48%", "ref_2019": "—" },
+      { "area": "Household credit", "metric": "subprime_auto_60", "latest": "6.27% (restated)", "year_ago": "6.46%", "ref_2019": "5.93% (Aug)" },
+      { "area": "Sentiment & AI", "metric": "consumer_sentiment", "latest": "51.0 (Nov, prelim.)", "year_ago": "51.0", "ref_2019": "~96 avg" },
+      { "area": "Sentiment & AI", "metric": "big_tech_capex", "latest": ">$720B (2026 plan)", "year_ago": "~$410B (2025)", "ref_2019": "n/a" }
+    ],
+
+    "gauge_explainer": [
+      { "gauge": "Yield curve", "measures": "10-year minus 2-year Treasury yield", "levels": "Below zero = inverted", "why": "Inversions have preceded past recessions; the spread also bears on bank lending margins." },
+      { "gauge": "VIX", "measures": "Expected S&P 500 swings over the next 30 days, derived from options prices", "levels": "20 elevated · 30 high · 40 extreme", "why": "A widely used reading of market stress; high readings have coincided with tighter credit." },
+      { "gauge": "Dollar (DXY)", "measures": "U.S. dollar vs. six major currencies", "levels": "No fixed level; compared with its own history", "why": "Bears on foreign buyers' purchasing power and on financial conditions." }
+    ],
+
+    "inventory": [
+      { "market": "United States", "type": "Existing homes", "months": "5.1 (Oct)", "year_ago": "4.4", "median": "$416,700 (+0.4%)", "sales_yy": "−8.8%", "source_url": "https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report" },
+      { "market": "Texas statewide", "type": "Homes", "months": "5.5 (Q3)", "year_ago": "5.4", "median": "$325,000 Oct (−~3%)", "sales_yy": "−11% (Oct)", "source_url": "https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales" },
+      { "market": "Dallas–Fort Worth", "type": "Single-family", "months": "4.6 (Oct)", "year_ago": "4.4", "median": "$379,000 (−1.6%)", "sales_yy": "−15.6%", "source_url": "https://www.yangtan.realtor/post/dallas-vs-fort-worth-same-metro-two-very-different-housing-markets" },
+      { "market": "Houston", "type": "Single-family", "months": "5.5 (Oct)", "year_ago": "5.1", "median": "$320,000 (−3%)", "sales_yy": "−14.9%", "source_url": "https://myneighborhoodnews.com/houston-area-home-sales-drop-149-in-october-2026-as-housing-supply-reaches-14-year-high" },
+      { "market": "Austin metro", "type": "Homes", "months": "5.4 (Sep)", "year_ago": "5.5", "median": "$404,802 Oct (−6.9%)", "sales_yy": "−11.4% (Oct)", "source_url": "https://cbsaustin.com/news/local/austin-area-home-prices-fall-nearly-7-as-affordability-pressures-buyers" },
+      { "market": "San Antonio", "type": "Homes", "months": "5.95 (Sep)", "year_ago": "5.9", "median": "~$299,000 Oct (flat)", "sales_yy": "−5% (Oct)", "source_url": "https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales" },
+      { "market": "DFW-area MLS (NTREIS)", "type": "Land (195 sales)", "months": "21.9 (Sep)", "year_ago": "—", "median": "$148,000 (+6%)", "sales_yy": "−26%", "source_url": "https://www.mymetrotex.com/wp-content/uploads/2026/10/NTREIS-Monthly-MLS-Summary-Report-202609.pdf" },
+      { "market": "DFW-area MLS (NTREIS)", "type": "Commercial sale (51 sales)", "months": "30.2 (Sep)", "year_ago": "—", "median": "$558,000 (+27%)", "sales_yy": "−6%", "source_url": "https://www.mymetrotex.com/wp-content/uploads/2026/10/NTREIS-Monthly-MLS-Summary-Report-202609.pdf" }
+    ],
+
+    "metros": [
+      { "metro": "Dallas–FW", "history_key": "Dallas–FW", "permits_ytd": "47,666", "permits_yy_pct": -9.3, "rent": "$1,413", "rent_yy": "−1.3%", "office_vacancy": "18.6%", "permits_url": "https://fred.stlouisfed.org/series/DALL148BPPRIV" },
+      { "metro": "Houston", "history_key": "Houston", "permits_ytd": "42,916", "permits_yy_pct": -14.3, "rent": "$1,330", "rent_yy": "−1.9%", "office_vacancy": "23.6%", "permits_url": "https://fred.stlouisfed.org/series/HOUS448BPPRIV" },
+      { "metro": "Austin", "history_key": "Austin", "permits_ytd": "17,598", "permits_yy_pct": -14.7, "rent": "$1,296", "rent_yy": "−1.2%", "office_vacancy": "24.5%", "permits_url": "https://fred.stlouisfed.org/series/AUST448BPPRIV" },
+      { "metro": "San Antonio", "history_key": "San Antonio", "permits_ytd": "8,723", "permits_yy_pct": 4.3, "rent": "$1,140", "rent_yy": "−3.8%", "office_vacancy": "—", "permits_url": "https://fred.stlouisfed.org/series/SANA748BPPRIV" },
+      { "metro": "U.S. reference", "history_key": null, "permits_ytd": "—", "permits_yy_pct": null, "rent": "$1,384", "rent_yy": "+0.1%", "office_vacancy": "17.8%", "permits_url": null }
+    ],
+
+    "reference_levels": [
+      { "indicator": "Sahm rule", "metric": "unemployment", "reference": "0.50 pts", "today": "~0.0" },
+      { "indicator": "Yield curve (10y–2y)", "metric": "yield_curve", "reference": "below zero", "today": "+0.30" },
+      { "indicator": "VIX", "metric": "vix", "reference": "20 elevated / 30 high", "today": "24.5" },
+      { "indicator": "Inflation (CPI)", "metric": "cpi_yoy", "reference": "Fed target 2%", "today": "3.7%" },
+      { "indicator": "Junk-bond spread", "metric": "junk_spread", "reference": ">~5 pts in stress", "today": "3.52" },
+      { "indicator": "Continuing claims", "metric": "continuing_claims", "reference": "~1.9M a year ago", "today": "1.763M" },
+      { "indicator": "Office occupancy", "metric": "office_occupancy_kastle", "reference": "100% = 2019", "today": "~56%" }
+    ],
+
+    "release_calendar": [
+      { "date": "Thursdays", "release": "Weekly jobless claims" },
+      { "date": "Early Dec", "release": "Challenger layoffs and BLS jobs" },
+      { "date": "Dec 8–9", "release": "Federal Reserve meeting" },
+      { "date": "Dec 10", "release": "November CPI" },
+      { "date": "Dec 17", "release": "November permits and starts" },
+      { "date": "Mid-Dec", "release": "ATTOM foreclosures" },
+      { "date": "Early Jan", "release": "Q4 office/industrial reports" }
+    ]
+  },
+
+  "themes": [
+    {
+      "title": "Housing: high rates, low turnover",
+      "bullets": [
+        { "text": "Mortgage rates (7.28%) are well above the 20-year average (4.8%); existing sales are at the slowest pace since 2010.", "links": [{ "phrase": "7.28%", "url": "https://fred.stlouisfed.org/series/MORTGAGE30US" }, { "phrase": "slowest pace since 2010", "url": "https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report" }] },
+        { "text": "Prices are flat nationally (+0.4%) and slightly lower in Texas (statewide median down about 3% in October).", "links": [{ "phrase": "statewide median down about 3%", "url": "https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales" }] },
+        { "lead": "Other side:", "text": "Texas listings rose 2.8% in Q3, giving buyers more choice.", "links": [{ "phrase": "Texas listings rose 2.8%", "url": "https://www.webull.com/news/15780751986238464" }] }
+      ]
+    },
+    {
+      "title": "Building pipeline: slowing",
+      "bullets": [
+        { "text": "Builder confidence 25, the lowest since April 2012; 46% of builders cut prices in November.", "links": [{ "phrase": "Builder confidence 25", "url": "https://www.nahb.org/news-and-economics/press-releases/2026/11/builder-sentiment-continues-to-fall-on-affordability-concerns" }] },
+        { "text": "U.S. permits in 2025 were 18% below the 2021 high (October pace 25% below); Texas 2025 was 20% below its 2022 peak; Houston and Austin about −14% this year.", "links": [{ "phrase": "18% below the 2021 high", "url": "https://www.census.gov/construction/bps/pdf/annual_highlights.pdf" }, { "phrase": "Houston and Austin about −14%", "url": "https://fred.stlouisfed.org/series/HOUS448BPPRIV" }] },
+        { "lead": "Other side:", "text": "Texas metros are still working through a large apartment supply wave, so rents are falling now.", "links": [{ "phrase": "large apartment supply wave", "url": "https://www.apartments.com/grow/learning-center/texas-multifamily-market-conditions-2026" }] }
+      ]
+    },
+    {
+      "title": "Jobs: steady, softer at the edges",
+      "bullets": [
+        { "text": "Unemployment 4.1% and weekly claims 203,000 are low by 20-year standards.", "links": [{ "phrase": "Unemployment 4.1%", "url": "https://fred.stlouisfed.org/series/UNRATE" }, { "phrase": "weekly claims 203,000", "url": "https://www.dol.gov/ui/data.pdf" }] },
+        { "text": "Average job search is 27.1 weeks, recent-graduate unemployment is 5.6%, and AI-cited layoffs rose in 2026 before falling to 1,265 in October.", "links": [{ "phrase": "recent-graduate unemployment is 5.6%", "url": "https://www.newyorkfed.org/research/college-labor-market" }, { "phrase": "1,265 in October", "url": "https://www.challengergray.com/blog/category/job-cuts/" }] },
+        { "lead": "Other side:", "text": "total announced layoffs are down 44% (Jan–Oct vs. Jan–Oct 2025).", "links": [{ "phrase": "total announced layoffs are down 44%", "url": "https://www.challengergray.com/blog/category/job-cuts/" }] }
+      ]
+    },
+    {
+      "title": "Household credit: mixed",
+      "bullets": [
+        { "lead": "Improving:", "text": "card charge-offs (3.82%) are below a year ago; new card serious delinquencies are at the lowest since Q1 2024.", "links": [{ "phrase": "3.82%", "url": "https://fred.stlouisfed.org/series/CORCCACBS" }, { "phrase": "lowest since Q1 2024", "url": "https://pro.thestreet.com/market-commentary/household-debt-jumps-the-most-since-2022-delinquencies-climb-to-highest-since-2016" }] },
+        { "lead": "Worsening:", "text": "total delinquency 4.96%, highest since 2016; new auto 90+ day delinquencies highest since 2010; bankruptcies up each year since 2022; foreclosure filings +21% (H1).", "links": [{ "phrase": "total delinquency 4.96%", "url": "https://pro.thestreet.com/market-commentary/household-debt-jumps-the-most-since-2022-delinquencies-climb-to-highest-since-2016" }, { "phrase": "foreclosure filings +21%", "url": "https://www.attomdata.com/?p=43794" }] },
+        { "lead": "Scale:", "text": "foreclosures are about one-eighth of the 2010 peak.", "links": [{ "phrase": "one-eighth of the 2010 peak", "url": "https://www.attomdata.com/?p=40719" }] }
+      ]
+    }
+  ],
+
+  "sections": {
+    "twenty-year": {
+      "c1_bullets": [
+        { "text": "Unemployment peaked at 9.6% (2010); 2025 averaged 4.3%.", "links": [{ "phrase": "peaked at 9.6%", "url": "https://fred.stlouisfed.org/series/UNRATE" }] },
+        { "text": "Mortgage rates bottomed at a 2.96% annual average (2021); 2023–2025 (6.6–6.8%) are slightly above 2006–07 levels (6.3–6.4%).", "links": [{ "phrase": "2.96% annual average", "url": "https://fred.stlouisfed.org/series/MORTGAGE30US" }] }
+      ],
+      "c2_bullets": [
+        { "text": "Foreclosures peaked at 2.87M properties (2010); 2025 was 367,460, about one-eighth of the peak.", "links": [{ "phrase": "2.87M properties", "url": "https://www.calculatedriskblog.com/2010/01/realtytrac-2009-was-record-year-for.html" }, { "phrase": "367,460", "url": "https://www.attomdata.com/?p=40719" }] },
+        { "text": "Bankruptcies peaked at 1.59M (2010); 2025 was 574,314, up each year since the 2022 low; foreclosures rose 14% in 2025.", "links": [{ "phrase": "peaked at 1.59M", "url": "https://www.uscourts.gov/node/3462" }, { "phrase": "574,314", "url": "https://www.uscourts.gov/node/62753/" }] }
+      ]
+    },
+    "jobs-ai": {
+      "bullets": [
+        { "text": "AI-cited cuts 12,742 in 2024 and 54,836 in 2025; 2026 peaked at 38,579 in May and was 1,265 in October.", "links": [{ "phrase": "12,742 in 2024", "url": "https://www.challengergray.com/blog/2025-year-end-challenger-report-highest-q4-layoffs-since-2008-lowest-ytd-hiring-since-2010/" }, { "phrase": "1,265 in October", "url": "https://www.challengergray.com/blog/category/job-cuts/" }] },
+        { "text": "AI was the top stated reason every month from March to July 2026, then below 10% of monthly cuts in August–October.", "links": [{ "phrase": "top stated reason", "url": "https://www.challengergray.com/blog/category/job-cuts/" }] },
+        { "text": "Unemployment 4.1% (Oct) with 165,000 jobs added, vs. a prior 12-month average of 48,000; recent-graduate unemployment 5.6% (Q2, NY Fed); average job search 27.1 weeks.", "links": [{ "phrase": "4.1% (Oct)", "url": "https://fred.stlouisfed.org/series/UNRATE" }, { "phrase": "165,000 jobs added", "url": "https://www.bls.gov/news.release/empsit.nr0.htm" }, { "phrase": "prior 12-month average of 48,000", "url": "https://abc7news.com/story/consumer-prices-increased-04-october-higher-expected/20029965/" }, { "phrase": "recent-graduate unemployment 5.6%", "url": "https://www.newyorkfed.org/research/college-labor-market" }] }
+      ]
+    },
+    "credit": {
+      "bullets": [
+        { "text": "Card charge-offs 3.82% (Q2 2026) vs. 4.19% a year earlier: near 2019 (3.78%), well below the 2009 peak (10.54%).", "links": [{ "phrase": "3.82% (Q2 2026)", "url": "https://fred.stlouisfed.org/series/CORCCACBS" }] },
+        { "text": "Seriously late (90+ days): student loans 10.9%, autos 5.66%, the highest since the series began in 2003.", "links": [{ "phrase": "autos 5.66%", "url": "https://www.newyorkfed.org/newsevents/news/research/2026/20261110" }] },
+        { "text": "4.96% of all household debt is in some stage of delinquency, up from 4.48% a year ago, the highest since 2016; card balances 90+ days late 12.9% (2010 peak 13.74%).", "links": [{ "phrase": "4.96% of all household debt", "url": "https://www.newyorkfed.org/medialibrary/interactives/householdcredit/data/pdf/hhdc_2026q3.pdf" }] }
+      ]
+    },
+    "rates": {
+      "bullets": [
+        { "text": "Inflation 3.7% (Sep) is energy-led: energy +20.4% y/y, while core is 2.6%. No October annual rate was published (2025 shutdown); October rose 0.4% on the month.", "links": [{ "phrase": "Inflation 3.7%", "url": "https://fred.stlouisfed.org/series/CPIAUCSL" }, { "phrase": "energy +20.4% y/y", "url": "https://www.bls.gov/news.release/cpi.htm?lv=true" }, { "phrase": "No October annual rate was published", "url": "https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm" }] },
+        { "text": "Futures implied a >90% chance of a 0.25-pt hike at the Dec 8–9 meeting (as of Nov 17).", "links": [{ "phrase": ">90% chance", "url": "https://tradingeconomics.com/united-states/implied-rates/news/602003" }] },
+        { "text": "Big Tech 2026 plans: Amazon ~$220B, Alphabet $195–205B, Meta $135–145B (~$245B total in 2024).", "links": [{ "phrase": "Amazon ~$220B", "url": "https://tech-insider.org/big-tech-720-billion-data-center-spending-free-cash-flow-2026/" }] },
+        { "text": "S&P 500 hit its lowest close since late July on Nov 17; junk-bond spread 3.52 pts, below the ~5 pts seen in past stress periods.", "links": [{ "phrase": "lowest close since late July", "url": "https://pro.thestreet.com/market-commentary/can-nvidia-save-the-indices" }, { "phrase": "junk-bond spread 3.52", "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2" }] }
+      ]
+    },
+    "gauges": {
+      "bullets": [
+        { "text": "Yield curve +0.30 pts on Nov 17, not inverted; 2026 low of 0.22 pts. It was inverted for most of 2022–2024; inversions have preceded past recessions.", "links": [{ "phrase": "+0.30 pts on Nov 17", "url": "https://www.allinvestview.com/yield-curve/" }, { "phrase": "2026 low of 0.22", "url": "https://www.connectcre.com/?p=496710" }] },
+        { "text": "VIX closed at 24.52 on Nov 18, after spiking 70% to 28.18 on Nov 5; 2026 average 18.2 vs. 32.7 in 2008 and 29.3 in 2020.", "links": [{ "phrase": "closed at 24.52", "url": "https://www.ad-hoc-news.de/boerse/news/marktberichte/vix-ends-november-18-at-24-52-down-3-69-percent/70533036" }, { "phrase": "spiking 70% to 28.18", "url": "https://www.thetrading.tools/chart-of-the-day/2026-11-05-vix-up-70-percent-in-a-day" }] },
+        { "text": "Dollar index reached a 19-month high of 103.97 on Nov 19; +3.5% y/y; much of the rise reflects a weaker euro; the Fed broad index rose ~2% in 2026 through Nov 6.", "links": [{ "phrase": "19-month high of 103.97", "url": "https://www.fxstreet.com/news/us-dollar-takes-a-breather-after-rally-to-19-month-high-202611191423" }, { "phrase": "much of the rise reflects a weaker euro", "url": "https://www.fxstreet.com/analysis/why-the-us-dollars-rally-isnt-as-strong-as-it-looks-202611111707" }, { "phrase": "Fed broad index", "url": "https://fred.stlouisfed.org/series/DTWEXBGS" }] }
+      ]
+    },
+    "housing": {
+      "permit_bullets": [
+        { "text": "U.S. permits at a 1.295M annual pace in October, the lowest since May 2020; single-family 772,000, down 12.9%.", "links": [{ "phrase": "lowest since May 2020", "url": "https://pro.thestreet.com/market-commentary/what-to-watch-as-housing-starts-jump-but-total-permits-sink" }, { "phrase": "single-family 772,000", "url": "https://www.nahb.org/news-and-economics/press-releases/2026/11/single-family-starts-post-modest-rebound-amid-challenging-conditions" }] },
+        { "text": "Texas 147,854 units Jan–Sep 2026, 9.6% below the same months of 2025; the state peaked at 261,230 in 2022 vs. 82,104 in 2009.", "links": [{ "phrase": "147,854 units", "url": "https://fred.stlouisfed.org/series/TXBPPRIV" }] },
+        { "text": "U.S. 2025 total 1.43M, below the 2021 high (1.74M) and above the 2009 low (583,000).", "links": [{ "phrase": "2025 total 1.43M", "url": "https://www.census.gov/construction/bps/pdf/annual_highlights.pdf" }] }
+      ],
+      "sales_bullets": [
+        { "text": "Existing home sales 3.75M pace (Oct), lowest since 2010; pending-sales index 63.0, a record low; median price $416,700 (+0.4% y/y).", "links": [{ "phrase": "3.75M pace (Oct)", "url": "https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report" }, { "phrase": "index 63.0", "url": "https://pro.thestreet.com/market-commentary/existing-home-sales-fall-to-lowest-since-2010-but-the-worst-may-be-yet-to-come" }] },
+        { "text": "Mortgage delinquency 4.42%, +0.43 pts vs. a year ago (Q3, MBA); FHA foreclosure rate 1.89%, highest since 2017.", "links": [{ "phrase": "Mortgage delinquency 4.42%", "url": "https://www.scotsmanguide.com/news/fha-and-va-foreclosures-reach-highest-levels-in-nearly-a-decade/" }, { "phrase": "FHA foreclosure rate 1.89%", "url": "https://www.scotsmanguide.com/news/fha-and-va-foreclosures-reach-highest-levels-in-nearly-a-decade/" }] }
+      ],
+      "mh_bullets": [
+        { "text": "Shipments ~103,000 in 2025, double the 2009–10 low; 2026 production −5.1% Jan–Aug (MHARR); average new price $129,400 (Jun 2026) vs. $84,400 (Jun 2019).", "links": [{ "phrase": "Shipments ~103,000 in 2025", "url": "https://www.manufacturedhousing.org/industry-resources/economic-reports/" }, { "phrase": "−5.1% Jan–Aug", "url": "https://www.manufacturedhomepronews.com/mharr-v-mhi-dueling-aug-2026-report-on-new-hud-code-manufactured-housing-industry-data-what-the-latest-key-performance-indicators-kpis-revealed-celebrate-hold-kpi-ignore-crooked-e-fea/" }, { "phrase": "$129,400", "url": "https://fred.stlouisfed.org/series/SPTNSAUS" }, { "phrase": "$84,400 (Jun 2019)", "url": "https://fred.stlouisfed.org/data/SPTNSAUS" }] }
+      ]
+    },
+    "inventory": {
+      "how_to_read": "Months of inventory = listings for sale ÷ sales per month. A higher number means more choice for buyers and more competition among sellers; a lower number means the reverse. Benchmarks differ: NAHB cites 4.5–6 months as balanced nationally; Texas sources have cited 3–4 months (Texas Real Estate Research Center) or 4–5 months (Texas Realtors).",
+      "c16": [
+        { "market": "U.S. (Oct)", "months": 5.1, "year_ago": 4.4 },
+        { "market": "Texas (Q3)", "months": 5.5, "year_ago": 5.4 },
+        { "market": "Dallas–FW (Oct)", "months": 4.6, "year_ago": 4.4 },
+        { "market": "Houston (Oct)", "months": 5.5, "year_ago": 5.1 },
+        { "market": "Austin (Sep)", "months": 5.4, "year_ago": 5.5 },
+        { "market": "San Antonio (Sep)", "months": 5.95, "year_ago": 5.9 }
+      ],
+      "bullets": [
+        { "text": "U.S. supply 5.1 months, the highest since November 2015, as sales fell to a 16-year low.", "links": [{ "phrase": "highest since November 2015", "url": "https://eyeonhousing.org/2026/11/existing-home-sales-fell-to-16-year-low/" }] },
+        { "text": "Houston supply at a 14-year high (5.5 vs. 5.1 months a year ago); Dallas–FW has the least supply of the four big metros at 4.6 months.", "links": [{ "phrase": "14-year high", "url": "https://myneighborhoodnews.com/houston-area-home-sales-drop-149-in-october-2026-as-housing-supply-reaches-14-year-high" }, { "phrase": "4.6 months", "url": "https://www.yangtan.realtor/post/dallas-vs-fort-worth-same-metro-two-very-different-housing-markets" }] },
+        { "text": "Austin and San Antonio are roughly unchanged from a year ago, near 5.5–6 months.", "links": [{ "phrase": "Austin", "url": "https://texags.com/forums/59/topics/3635243" }, { "phrase": "San Antonio", "url": "https://myneighborhoodnews.com/san-antonio-housing-market-shifts-in-september-2026-as-home-prices-fall-and-buyers-gain-more-options" }] }
+      ]
+    },
+    "cre": {
+      "c10": [
+        { "sector": "Office", "value": 18.2, "color": "navy" },
+        { "sector": "Malls", "value": 8.2, "color": "orange" },
+        { "sector": "Shopping centers", "value": 5.9, "color": "orange" },
+        { "sector": "Industrial", "value": 6.8, "color": "teal" }
+      ],
+      "c11": [
+        { "market": "U.S.", "value": 17.8 },
+        { "market": "Dallas–FW", "value": 18.6 },
+        { "market": "Houston", "value": 23.6 },
+        { "market": "Austin", "value": 24.5 }
+      ],
+      "bullets": [
+        { "lead": "Office:", "text": "Moody's measure rose from 16.8% (2019) to a record 20.7% (2025). Other firms measure differently but show the same direction now: CBRE 18.2% (−0.6 pts y/y), Yardi 17.8% (−0.8 pts y/y). CBRE prime space 11.9%; completions −76% y/y. Badge-ins ~56% of 2019.", "links": [{ "phrase": "16.8% (2019)", "url": "https://www.facilitiesdive.com/news/us-office-vacancy-rates-moodys-analysis/720862/" }, { "phrase": "record 20.7%", "url": "https://www.scotsmanguide.com/news/office-market-contracts-as-economic-uncertainties-and-ai-pressures-persist/" }, { "phrase": "CBRE 18.2% (−0.6 pts y/y)", "url": "https://www.cbre.com/insights/figures/q3-2026-us-office-market-report" }, { "phrase": "Yardi 17.8% (−0.8 pts y/y)", "url": "https://www.yardimatrix.com/blog/us-office-market-outlook/" }, { "phrase": "Badge-ins ~56% of 2019", "url": "https://www.kastle.com/safety-wellness/getting-america-back-to-work/" }] },
+        { "lead": "Industrial:", "text": "vacancy 6.8% (C&W), down from a 7.0% peak in late 2025 and the lowest since end-2024; deliveries −13% YTD, but space under construction +23% y/y.", "links": [{ "phrase": "6.8% (C&W)", "url": "https://www.cushmanwakefield.com/en/united-states/insights/us-marketbeats" }, { "phrase": "space under construction +23% y/y", "url": "https://www.cushmanwakefield.com/en/united-states/insights/us-marketbeats/us-industrial-marketbeat" }] },
+        { "lead": "Retail:", "text": "among the tightest sectors at 4.3% (Colliers); shopping centers 5.9% vs. ~7% pre-pandemic; malls 8.2%.", "links": [{ "phrase": "4.3% (Colliers)", "url": "https://www.colliers.com/en/research" }] }
+      ],
+      "texas_bullets": [
+        { "text": "DFW office 18.6% (Yardi), down 3.6 pts in a year; CBRE's broader measure 24.6%.", "links": [{ "phrase": "18.6% (Yardi)", "url": "https://www.credaily.com/?p=225102" }, { "phrase": "24.6%", "url": "https://www.credaily.com/?p=223979" }] },
+        { "text": "Houston office 25.6% by Newmark's measure (23.6% Yardi), flat; leasing at its weakest since 2009.", "links": [{ "phrase": "25.6% by Newmark's measure", "url": "https://www.credaily.com/?p=224274" }] },
+        { "text": "DFW industrial 7.8% (CBRE), down from 8.9% a year ago; DFW leads the U.S. in industrial space under construction.", "links": [{ "phrase": "7.8% (CBRE)", "url": "https://www.cbre.com/insights/figures/dallas-fort-worth-industrial-figures-q3-2026" }] }
+      ]
+    },
+    "tx-metros": {
+      "c14": [
+        { "metro": "Dallas–FW", "rent": 1413, "yy": -1.3 },
+        { "metro": "Houston", "rent": 1330, "yy": -1.9 },
+        { "metro": "Austin", "rent": 1296, "yy": -1.2 },
+        { "metro": "San Antonio", "rent": 1140, "yy": -3.8 }
+      ],
+      "bullets": [
+        { "lead": "Permits:", "text": "Houston (−14.3%) and Austin (−14.7%) fell the most; San Antonio rose 4.3% from a low 2025 base; Austin's 2025 total was 45% below its 2021 peak.", "links": [{ "phrase": "Houston (−14.3%)", "url": "https://fred.stlouisfed.org/series/HOUS448BPPRIV" }, { "phrase": "Austin (−14.7%)", "url": "https://fred.stlouisfed.org/series/AUST448BPPRIV" }, { "phrase": "San Antonio rose 4.3%", "url": "https://fred.stlouisfed.org/series/SANA748BPPRIV" }] },
+        { "lead": "Rents:", "text": "all four metros are below a year ago while the U.S. is +0.1%; San Antonio has the steepest decline of any large U.S. metro; about 32% of properties nationally advertise a month or more free.", "links": [{ "phrase": "steepest decline of any large U.S. metro", "url": "https://www.apartmentlist.com/renter-life/where-rents-are-falling" }, { "phrase": "32% of properties", "url": "https://www.apartmentlist.com/renter-life/where-rents-are-falling" }] },
+        { "lead": "Home prices (Oct):", "text": "statewide $325,000 (−~3%); Austin metro $404,802 (−6.9%, partly a shift toward cheaper sales); Houston $320,000 (−3%); DFW $379,000 (−1.6%); San Antonio ~$299,000, flat.", "links": [{ "phrase": "statewide $325,000", "url": "https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales" }, { "phrase": "Austin metro $404,802", "url": "https://cbsaustin.com/news/local/austin-area-home-prices-fall-nearly-7-as-affordability-pressures-buyers" }, { "phrase": "shift toward cheaper sales", "url": "https://cbsaustin.com/news/local/austin-area-home-prices-fall-nearly-7-as-affordability-pressures-buyers" }, { "phrase": "Houston $320,000", "url": "https://myneighborhoodnews.com/houston-area-home-sales-drop-149-in-october-2026-as-housing-supply-reaches-14-year-high" }, { "phrase": "DFW $379,000", "url": "https://www.yangtan.realtor/post/dallas-vs-fort-worth-same-metro-two-very-different-housing-markets" }, { "phrase": "San Antonio ~$299,000", "url": "https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales" }] }
+      ]
+    },
+    "texas": {
+      "bullets": [
+        { "text": "Texas recorded the most foreclosure starts of any state, 37,215 in 2025.", "links": [{ "phrase": "37,215 in 2025", "url": "https://www.attomdata.com/?p=40719" }] },
+        { "text": "Foreclosures complete in 155 days on average in Texas vs. 563 nationally.", "links": [{ "phrase": "155 days", "url": "https://www.thetitlereport.com/articles/97736.aspx" }] },
+        { "text": "New manufactured home sales titled: 11,976 in 2026 through September.", "links": [{ "phrase": "11,976", "url": "https://www.texasmha.com/texas-manufactured-housing-market-report-sales-data-analysis" }] }
+      ]
+    },
+    "europe": {
+      "bullets": [
+        { "text": "Euro area unemployment 6.5% (Sep), up from 6.3%; EU youth unemployment 15.5%; UK 4.6%, down from 4.9%.", "links": [{ "phrase": "6.5% (Sep)", "url": "https://www.staffingindustry.com/news/global-daily-news/eu-jobless-rate-rises-to-62-in-september" }, { "phrase": "EU youth unemployment 15.5%", "url": "https://ec.europa.eu/eurostat" }, { "phrase": "UK 4.6%", "url": "https://www.thestar.com.my/news/world/2026/11/18/britain039s-unemployment-rate-at-46-pct-in-q3" }] },
+        { "text": "EU business bankruptcies at their highest level since early 2019 (Q2 2026).", "links": [{ "phrase": "highest level since early 2019", "url": "https://ec.europa.eu/eurostat/en/web/products-eurostat-news/w/ddn-20260817-1" }] },
+        { "text": "Morgan Stanley estimates up to 20% of European bank jobs could be cut over five years due to AI, mostly through attrition.", "links": [{ "phrase": "up to 20% of European bank jobs", "url": "https://freepressjournal.in/business/morgan-stanley-warns-of-bank-job-cuts-in-europe-due-to-ai-productivity-gains" }] }
+      ]
+    }
+  }
+}

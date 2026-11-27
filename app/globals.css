@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* Design tokens (spec Section 4.2). Light theme only, matching the PDF edition. */
+@theme {
+  --color-navy: #14213d;
+  --color-teal: #1f7a8c;
+  --color-orange: #e07a2e;
+  --color-purple: #8a6fb0;
+  --color-grey: #b8bec6;
+  --color-dark: #3a3f47;
+  --color-ink: #1e2430;
+  --color-muted: #6a7380;
+  --color-light: #e9edf1;
+  --color-panel: #f4f6f8;
+  --color-border: #e1e6ec;
+  --color-eyebrow: #9fb4cc;
+
+  --color-good: #1e8e3e;
+  --color-good-bg: #e3f4e7;
+  --color-good-text: #1e7a36;
+  --color-bad: #c62828;
+  --color-bad-bg: #fbe5e5;
+  --color-bad-text: #b22222;
+  --color-neutral: #1e2430;
+  --color-neutral-bg: #e6e8eb;
+
+  --color-alert-amber: #b26a00;
+  --color-alert-red: #c62828;
+  --color-alert-extreme: #8b0000;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-lg: 1024px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
+}
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 16px;
+  }
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* SourceLink: dotted teal underline (spec 4.4 #11). */
+.source-link {
+  color: var(--color-teal);
+  text-decoration: underline dotted;
+  text-decoration-color: var(--color-teal);
+  text-underline-offset: 2px;
+}
+.source-link:hover {
+  text-decoration-style: solid;
+}
+
+/* Hide scrollbars on the mobile chip bar while keeping it scrollable. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Print: US Letter, 0.6in margins; each section on a new page (spec Section 8). */
+@page {
+  size: letter;
+  margin: 0.6in;
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    font-size: 11pt;
+  }
+  .edition-section {
+    break-before: page;
+  }
+  .edition-section:first-of-type {
+    break-before: auto;
+  }
+  .source-link {
+    color: #1a4fd6;
+    text-decoration: underline solid;
+  }
+  .avoid-break {
+    break-inside: avoid;
+  }
+  .table-scroll {
+    overflow: visible !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

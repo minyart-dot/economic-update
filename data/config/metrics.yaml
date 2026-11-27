@@ -1,0 +1,637 @@
+# Metric registry (spec Sections 5, 6, 10 and 11).
+#
+# Fields
+#   label          plain-English name shown on the site
+#   unit           pct | pts | usd | count | millions | thousands | index | months | days | usd_bn | ratio
+#   decimals       digits after the decimal point for the default display
+#   polarity       higher_is_good | lower_is_good | mixed   (Section 5.3; mixed always renders black)
+#   flat_threshold change smaller than this is "flat" (Section 5.2).
+#                  Omit to use the default: 0.05 points for pct/pts units, 1% relative otherwise.
+#                  Write as {relative: 0.002} or {points: 0.05}.
+#   automation     AUTO (API) | SEMI (scripted download/parse) | MANUAL (owner enters monthly)
+#   frequency      daily | weekly | monthly | quarterly | annual | snapshot
+#   max_age_days   validator warns when the as-of date is older than this (Section 11.3)
+#   fred           FRED series id(s) when AUTO via FRED
+#   required       build fails if a MANUAL value is still stale (Section 11.2)
+#   source_name / source_url   default source; an edition can override per value
+
+defaults:
+  max_age_days: { daily: 7, weekly: 14, monthly: 45, quarterly: 120, annual: 400, snapshot: 45 }
+
+metrics:
+  # ---------------------------------------------------------------- Labor
+  unemployment:
+    label: Unemployment rate
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: UNRATE
+    source_name: BLS via FRED
+    source_url: https://fred.stlouisfed.org/series/UNRATE
+    required: true
+  initial_claims:
+    label: New jobless claims (weekly)
+    unit: count
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: weekly
+    fred: ICSA
+    source_name: DOL via FRED
+    source_url: https://www.dol.gov/ui/data.pdf
+  continuing_claims:
+    label: Continuing claims
+    unit: millions
+    decimals: 3
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: weekly
+    fred: CCSA
+    source_name: DOL via FRED
+    source_url: https://fred.stlouisfed.org/series/CCSA
+  job_openings:
+    label: Job openings
+    unit: millions
+    decimals: 1
+    polarity: higher_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: JTSJOL
+    source_name: BLS JOLTS via FRED
+    source_url: https://fred.stlouisfed.org/series/JTSJOL
+  payrolls_change:
+    label: Jobs added (nonfarm payrolls)
+    unit: count
+    polarity: higher_is_good
+    automation: AUTO
+    frequency: monthly
+    source_name: BLS jobs report
+    source_url: https://www.bls.gov/news.release/empsit.nr0.htm
+  avg_weeks_unemployed:
+    label: Average job search (weeks)
+    unit: count
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: UEMPMEAN
+    source_name: BLS via FRED
+    source_url: https://www.bls.gov/news.release/empsit.nr0.htm
+  recent_grad_unemployment:
+    label: Recent-graduate unemployment
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: NY Fed College Labor Market
+    source_url: https://www.newyorkfed.org/research/college-labor-market
+
+  # ---------------------------------------------------------------- Prices and rates
+  cpi_yoy:
+    label: Inflation (CPI, yearly)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: CPIAUCSL
+    source_name: BLS CPI via FRED
+    source_url: https://fred.stlouisfed.org/series/CPIAUCSL
+    required: true
+  core_cpi_yoy:
+    label: Core inflation (CPI ex food and energy)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: CPILFESL
+    source_name: BLS CPI
+    source_url: https://www.bls.gov/news.release/cpi.htm
+  energy_cpi_yoy:
+    label: Energy prices (CPI energy, yearly)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: CPIENGSL
+    source_name: BLS CPI
+    source_url: https://www.bls.gov/news.release/cpi.htm?lv=true
+  fed_funds:
+    label: Fed funds rate
+    unit: pct
+    decimals: 2
+    polarity: mixed
+    automation: AUTO
+    frequency: daily
+    fred: [DFEDTARL, DFEDTARU]
+    source_name: Federal Reserve via FRED
+    source_url: https://fred.stlouisfed.org/series/DFEDTARU
+  mortgage30:
+    label: 30-year mortgage rate
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: weekly
+    fred: MORTGAGE30US
+    source_name: Freddie Mac PMMS via FRED
+    source_url: https://fred.stlouisfed.org/series/MORTGAGE30US
+    required: true
+  treasury10:
+    label: 10-year Treasury yield
+    unit: pct
+    decimals: 2
+    polarity: mixed
+    automation: AUTO
+    frequency: daily
+    fred: DGS10
+    source_name: Treasury via FRED / Trading Economics
+    source_url: https://tradingeconomics.com/united-states/government-bond-yield
+  junk_spread:
+    label: Junk-bond spread
+    unit: pts
+    decimals: 2
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: daily
+    fred: BAMLH0A0HYM2
+    source_name: ICE BofA via FRED
+    source_url: https://fred.stlouisfed.org/series/BAMLH0A0HYM2
+  yield_curve:
+    label: Yield curve (10-yr minus 2-yr)
+    unit: pts
+    decimals: 2
+    signed: true
+    polarity: mixed
+    automation: AUTO
+    frequency: daily
+    fred: T10Y2Y
+    source_name: FRED 10-yr minus 2-yr
+    source_url: https://fred.stlouisfed.org/series/T10Y2Y
+  vix:
+    label: VIX volatility index
+    unit: index
+    decimals: 2
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: daily
+    fred: VIXCLS
+    source_name: Cboe via FRED
+    source_url: https://fred.stlouisfed.org/series/VIXCLS
+    required: true
+  dxy:
+    label: Dollar index (DXY)
+    unit: index
+    decimals: 1
+    polarity: mixed
+    flat_threshold: { relative: 0.01 }
+    automation: MANUAL
+    frequency: snapshot
+    source_name: ICE close via FXStreet
+    source_url: https://www.fxstreet.com/news/us-dollar-takes-a-breather-after-rally-to-19-month-high-202611191423
+  broad_dollar:
+    label: Fed broad dollar index
+    unit: index
+    decimals: 2
+    polarity: mixed
+    automation: AUTO
+    frequency: daily
+    fred: DTWEXBGS
+    source_name: Federal Reserve via FRED
+    source_url: https://fred.stlouisfed.org/series/DTWEXBGS
+  fed_hike_odds:
+    label: Futures-implied odds of a Dec hike
+    unit: pct
+    decimals: 0
+    polarity: mixed
+    automation: MANUAL
+    frequency: snapshot
+    source_name: Trading Economics (CME FedWatch)
+    source_url: https://tradingeconomics.com/united-states/implied-rates/news/602003
+  consumer_sentiment:
+    label: Consumer sentiment
+    unit: index
+    decimals: 1
+    polarity: higher_is_good
+    automation: AUTO
+    frequency: monthly
+    fred: UMCSENT
+    source_name: University of Michigan via FRED
+    source_url: https://fred.stlouisfed.org/series/UMCSENT
+
+  # ---------------------------------------------------------------- Housing (U.S.)
+  existing_home_sales:
+    label: Existing home sales (annual pace)
+    unit: millions
+    decimals: 2
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: NAR
+    source_url: https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report
+    required: true
+  median_existing_price:
+    label: Median existing-home price
+    unit: usd
+    polarity: mixed
+    flat_threshold: { relative: 0.002 }
+    automation: MANUAL
+    frequency: monthly
+    source_name: NAR
+    source_url: https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report
+    required: true
+  months_inventory_us:
+    label: Months of inventory, U.S.
+    unit: months
+    decimals: 1
+    polarity: mixed
+    automation: MANUAL
+    frequency: monthly
+    source_name: NAR
+    source_url: https://www.nar.realtor/newsroom/existing-home-sales-decreased-5-5-percent-october-nar-report
+    required: true
+  pending_home_sales_index:
+    label: Pending home sales index
+    unit: index
+    decimals: 1
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: NAR via TheStreet
+    source_url: https://pro.thestreet.com/market-commentary/existing-home-sales-fall-to-lowest-since-2010-but-the-worst-may-be-yet-to-come
+  builder_confidence:
+    label: Builder confidence (NAHB/Wells Fargo HMI)
+    unit: index
+    decimals: 0
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: NAHB/Wells Fargo HMI
+    source_url: https://www.nahb.org/news-and-economics/press-releases/2026/11/builder-sentiment-continues-to-fall-on-affordability-concerns
+    required: true
+  builders_cutting_prices:
+    label: Builders cutting prices
+    unit: pct
+    decimals: 0
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: NAHB/Wells Fargo HMI
+    source_url: https://www.nahb.org/news-and-economics/press-releases/2026/11/builder-sentiment-continues-to-fall-on-affordability-concerns
+  permits_us:
+    label: Building permits, U.S. (annual pace)
+    unit: millions
+    decimals: 3
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    fred: PERMIT
+    source_name: Census via FRED
+    source_url: https://www.census.gov/construction/nrc/pdf/newresconst_202610.pdf
+  permits_us_single_family:
+    label: Single-family permits (annual pace)
+    unit: count
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    fred: PERMIT1
+    source_name: Census via NAHB
+    source_url: https://www.nahb.org/news-and-economics/press-releases/2026/11/single-family-starts-post-modest-rebound-amid-challenging-conditions
+  housing_starts:
+    label: Housing starts (annual pace)
+    unit: millions
+    decimals: 3
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    fred: HOUST
+    source_name: Census via FRED
+    source_url: https://www.census.gov/construction/nrc/current/
+  new_home_months_supply:
+    label: New-home months' supply
+    unit: months
+    decimals: 1
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    fred: MSACSR
+    source_name: Census via FRED
+    source_url: https://fred.stlouisfed.org/series/MSACSR
+  mh_production_ytd:
+    label: Manufactured home production (YTD)
+    unit: count
+    polarity: mixed
+    automation: MANUAL
+    frequency: monthly
+    source_name: MHARR via Manufactured Home Pro News
+    source_url: https://www.manufacturedhomepronews.com/mharr-v-mhi-dueling-aug-2026-report-on-new-hud-code-manufactured-housing-industry-data-what-the-latest-key-performance-indicators-kpis-revealed-celebrate-hold-kpi-ignore-crooked-e-fea/
+  mh_avg_new_price:
+    label: Average new manufactured home price
+    unit: usd
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    fred: SPTNSAUS
+    source_name: Census via FRED
+    source_url: https://fred.stlouisfed.org/series/SPTNSAUS
+  mortgage_delinquency:
+    label: Mortgage delinquency rate (MBA)
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: MBA via Scotsman Guide
+    source_url: https://www.scotsmanguide.com/news/fha-and-va-foreclosures-reach-highest-levels-in-nearly-a-decade/
+  fha_foreclosure_rate:
+    label: FHA foreclosure rate
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: MBA via Scotsman Guide
+    source_url: https://www.scotsmanguide.com/news/fha-and-va-foreclosures-reach-highest-levels-in-nearly-a-decade/
+  flip_gross_roi:
+    label: Typical gross flipping ROI
+    unit: pct
+    decimals: 1
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: ATTOM Home Flipping Report
+    source_url: https://www.attomdata.com/news/market-trends/flipping/home-flipping-profits-continue-gradual-two-year-decline/
+  flip_gross_profit:
+    label: Typical gross flipping profit
+    unit: usd
+    polarity: higher_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: ATTOM Home Flipping Report
+    source_url: https://www.attomdata.com/news/market-trends/flipping/home-flipping-profits-continue-gradual-two-year-decline/
+  flip_rate:
+    label: Flips as a share of all home sales
+    unit: pct
+    decimals: 1
+    polarity: mixed
+    automation: MANUAL
+    frequency: quarterly
+    source_name: ATTOM via Webull
+    source_url: https://www.webull.com/news/15673816770479104
+  us_median_rent:
+    label: U.S. median rent
+    unit: usd
+    polarity: mixed
+    automation: SEMI
+    frequency: monthly
+    source_name: Apartment List Rent Index
+    source_url: https://www.apartmentlist.com/renter-life/where-rents-are-falling
+  us_apartment_occupancy:
+    label: U.S. apartment occupancy
+    unit: pct
+    decimals: 1
+    polarity: mixed
+    automation: MANUAL
+    frequency: quarterly
+    source_name: RealPage via CRE Daily
+    source_url: https://www.credaily.com/?p=223707
+
+  # ---------------------------------------------------------------- Commercial
+  office_vacancy_cbre:
+    label: Office vacancy (CBRE)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: CBRE
+    source_url: https://www.cbre.com/insights/figures/q3-2026-us-office-market-report
+  office_vacancy_yardi:
+    label: Office vacancy (Yardi Matrix)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: Yardi Matrix
+    source_url: https://www.yardimatrix.com/blog/us-office-market-outlook/
+  office_vacancy_moodys:
+    label: Office vacancy (Moody's, annual)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: annual
+    source_name: Moody's via Scotsman Guide
+    source_url: https://www.scotsmanguide.com/news/office-market-contracts-as-economic-uncertainties-and-ai-pressures-persist/
+  industrial_vacancy_cw:
+    label: Industrial vacancy (C&W)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: Cushman & Wakefield MarketBeat
+    source_url: https://www.cushmanwakefield.com/en/united-states/insights/us-marketbeats
+  retail_vacancy_colliers:
+    label: Retail vacancy (Colliers)
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: quarterly
+    source_name: Colliers research
+    source_url: https://www.colliers.com/en/research
+  office_occupancy_kastle:
+    label: Office occupancy (Kastle, % of 2019)
+    unit: pct
+    decimals: 0
+    polarity: mixed
+    automation: SEMI
+    frequency: weekly
+    source_name: Kastle Back to Work Barometer
+    source_url: https://www.kastle.com/safety-wellness/getting-america-back-to-work/
+
+  # ---------------------------------------------------------------- Household credit
+  bankruptcies_ytd:
+    label: Bankruptcy filings (YTD)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: Epiq/ABI
+    source_url: https://www.abi.org/node/1004659
+  card_chargeoff:
+    label: Card charge-off rate
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: quarterly
+    fred: CORCCACBS
+    source_name: Federal Reserve via FRED
+    source_url: https://fred.stlouisfed.org/series/CORCCACBS
+  card_delinquency:
+    label: Card delinquency rate
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: quarterly
+    fred: DRCCLACBS
+    source_name: Federal Reserve via FRED
+    source_url: https://fred.stlouisfed.org/series/DRCCLACBS
+  hh_debt_delinquent:
+    label: Household debt delinquent (NY Fed)
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: SEMI
+    frequency: quarterly
+    source_name: NY Fed Household Debt and Credit Report
+    source_url: https://www.newyorkfed.org/medialibrary/interactives/householdcredit/data/pdf/hhdc_2026q3.pdf
+  subprime_auto_60:
+    label: Subprime auto 60+ days late (Fitch)
+    unit: pct
+    decimals: 2
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: Fitch auto ABS index (via press coverage)
+    source_url: https://wolfstreet.com/2026/02/17/serious-delinquency-rates-for-subprime-prime-auto-loans-balances-and-debt-to-income-ratio-in-q4-2025/
+  foreclosure_filings_h1:
+    label: Foreclosure filings (properties, H1)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: ATTOM midyear report
+    source_url: https://www.attomdata.com/?p=43794
+  foreclosure_starts_h1:
+    label: Foreclosure starts (H1)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: ATTOM via HousingWire
+    source_url: https://www.housingwire.com/articles/us-foreclosures-rise-2026-midyear-attom-report/
+
+  # ---------------------------------------------------------------- Jobs and AI
+  job_cuts_ytd:
+    label: Announced job cuts (YTD)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: Challenger, Gray & Christmas
+    source_url: https://www.challengergray.com/blog/category/job-cuts/
+  ai_cited_cuts_month:
+    label: AI-cited job cuts (month)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: Challenger, Gray & Christmas
+    source_url: https://www.challengergray.com/blog/category/job-cuts/
+  big_tech_capex:
+    label: Big Tech AI capital spending
+    unit: usd_bn
+    decimals: 0
+    polarity: mixed
+    automation: MANUAL
+    frequency: quarterly
+    source_name: Company guidance via Tech Insider
+    source_url: https://tech-insider.org/big-tech-720-billion-data-center-spending-free-cash-flow-2026/
+
+  # ---------------------------------------------------------------- Texas
+  permits_texas_ytd:
+    label: Building permits, Texas (YTD)
+    unit: count
+    polarity: mixed
+    automation: AUTO
+    frequency: monthly
+    fred: TXBPPRIV
+    source_name: Census via FRED (NSA)
+    source_url: https://fred.stlouisfed.org/series/TXBPPRIV
+  texas_median_price:
+    label: Texas median home price
+    unit: usd
+    polarity: mixed
+    automation: MANUAL
+    frequency: monthly
+    source_name: Texas Realtors via Texas Public Radio
+    source_url: https://www.tpr.org/2026-11-18/san-antonio-home-sales-sluggish-but-not-as-bad-as-texas-u-s-sales
+  texas_months_inventory:
+    label: Months of inventory, Texas
+    unit: months
+    decimals: 1
+    polarity: mixed
+    automation: MANUAL
+    frequency: quarterly
+    source_name: Texas Realtors Q3 2026
+    source_url: https://www.webull.com/news/15780751986238464
+  texas_land_price_acre:
+    label: Texas rural land median price per acre
+    unit: usd
+    polarity: mixed
+    automation: MANUAL
+    frequency: quarterly
+    source_name: Texas Real Estate Research Center (TRERC)
+    source_url: https://texashuntingland.com/blog/texas-rural-land-market-data
+  tx_foreclosure_starts_h1:
+    label: Texas foreclosure starts (H1)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: monthly
+    source_name: ATTOM midyear report
+    source_url: https://www.attomdata.com/?p=42129
+  tx_personal_bankruptcies:
+    label: Texas personal bankruptcies (annual)
+    unit: count
+    polarity: lower_is_good
+    automation: MANUAL
+    frequency: annual
+    source_name: LendingTree / U.S. Courts
+    source_url: https://www.lendingtree.com/debt-consolidation/personal-bankruptcy-study/
+  tx_mh_titled:
+    label: Texas new manufactured homes titled (YTD)
+    unit: count
+    polarity: mixed
+    automation: MANUAL
+    frequency: monthly
+    source_name: Texas Manufactured Housing Association
+    source_url: https://www.texasmha.com/texas-manufactured-housing-market-report-sales-data-analysis
+
+  # ---------------------------------------------------------------- Europe
+  euro_unemployment:
+    label: Euro area unemployment
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    source_name: Eurostat (une_rt_m)
+    source_url: https://www.staffingindustry.com/news/global-daily-news/eu-jobless-rate-rises-to-62-in-september
+  eu_youth_unemployment:
+    label: EU youth unemployment
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    source_name: Eurostat (une_rt_m)
+    source_url: https://ec.europa.eu/eurostat
+  uk_unemployment:
+    label: UK unemployment
+    unit: pct
+    decimals: 1
+    polarity: lower_is_good
+    automation: AUTO
+    frequency: monthly
+    source_name: ONS (MGSX)
+    source_url: https://www.thestar.com.my/news/world/2026/11/18/britain039s-unemployment-rate-at-46-pct-in-q3

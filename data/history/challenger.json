@@ -1,0 +1,88 @@
+{
+  "_notes": "Appendix B seed. Challenger, Gray & Christmas. In ai_cited_cuts_monthly, null means the source reported only a combined total for those months (see the *_combined keys).",
+  "challenger_job_cuts": {
+    "years": [
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "2026_ytd_oct"
+    ],
+    "total": [
+      526915,
+      418770,
+      538659,
+      592556,
+      2304755,
+      321970,
+      363824,
+      721677,
+      761358,
+      1206374,
+      617189
+    ],
+    "ai_cited": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4247,
+      12742,
+      54836,
+      121401
+    ]
+  },
+  "ai_cited_cuts_monthly": {
+    "2024": [
+      381,
+      2,
+      null,
+      null,
+      null,
+      null,
+      null,
+      5943,
+      5616,
+      0,
+      0,
+      0
+    ],
+    "2024_mar_jul_combined": 800,
+    "2025": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      10300,
+      0,
+      7000,
+      31039,
+      6280,
+      142
+    ],
+    "2025_jan_jun_combined": 75,
+    "2026": [
+      7624,
+      4680,
+      15341,
+      21490,
+      38579,
+      14029,
+      10970,
+      3462,
+      3961,
+      1265
+    ]
+  }
+}
