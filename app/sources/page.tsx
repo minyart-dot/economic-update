@@ -19,7 +19,7 @@ export default function Sources() {
   const count = ed.references.reduce((n, g) => n + g.items.length, 0);
   const pdf = pdfHref(ed.edition);
   return (
-    <PageShell>
+    <PageShell active="sources">
       <section className="space-y-4">
         <SectionHeader number="" title="Sources" kicker={`Every source used in the ${ed.edition_label} edition`} />
         <p className="text-[14px] text-dark">

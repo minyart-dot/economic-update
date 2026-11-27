@@ -14,7 +14,7 @@ export default function Methodology() {
   const seed = loadEditionSeed(latestEditionId());
   return (
     <>
-      <HeaderBand editionLabel={seed.edition_label} dataAsOf={seed.data_as_of_label} />
+      <HeaderBand editionLabel={seed.edition_label} dataAsOf={seed.data_as_of_label} active="methodology" />
       <main id="main" className="mx-auto max-w-3xl space-y-10 px-4 py-10 sm:px-6">
         <p className="text-[13px]">
           <Link href="/" className="source-link">

@@ -115,7 +115,13 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
 
   return (
     <>
-      <HeaderBand editionLabel={ed.edition_label} dataAsOf={ed.data_as_of_label} pdfHref={pdfHref(ed.edition)} />
+      <HeaderBand
+        editionLabel={ed.edition_label}
+        dataAsOf={ed.data_as_of_label}
+        pdfHref={pdfHref(ed.edition)}
+        active={isLatest ? "latest" : "archive"}
+        editionId={ed.edition}
+      />
       <div className="mx-auto max-w-[1340px] lg:grid lg:grid-cols-[210px_minmax(0,1100px)] lg:gap-8 lg:px-6">
         <SectionNav items={nav} />
         <main id="main" className="min-w-0 px-4 pb-8 sm:px-6 lg:px-0">
