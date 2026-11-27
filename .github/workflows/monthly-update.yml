@@ -7,9 +7,14 @@
 #   2. Create data/manual/YYYY-MM.yaml if it doesn't exist yet (npm run manual-template).
 #   3. Build data/editions/YYYY-MM.json as a draft (npm run build:edition -- --draft). This fails
 #      while required manual fields are stale; the PR is opened anyway so the owner can fill them in.
-#   4. Validate (npm run validate) and keep the report even when it fails.
-#   5. Commit to branch edition/YYYY-MM and open (or update) the PR
-#      "Edition YYYY-MM: review & publish" with the manual-field checklist and the report.
+#   4. Optional, only when the ANTHROPIC_API_KEY secret is set (monthly/manual runs, not owner pushes):
+#      draft the summary text into data/drafts/YYYY-MM-summary.md (npm run draft-summary).
+#   5. Validate (npm run validate) and keep the report even when it fails.
+#   6. Optional, same condition: independent AI audit of the edition and draft (npm run audit),
+#      written to out/audit-YYYY-MM.md. Both AI steps only report; neither can fail the run.
+#   7. Commit to branch edition/YYYY-MM and open (or update) the PR
+#      "Edition YYYY-MM: review & publish" with the manual-field checklist, the report, and the
+#      AI draft and audit when present.
 #
 # Owner edits on edition/* branches (e.g. in GitHub's web editor) re-run the build and validation
 # and refresh one validation comment on the PR.
@@ -17,7 +22,8 @@
 # Nothing is published here: the email and PDF go out only after the owner sets
 # "status": "ready" and merges the PR (see newsletter.yml). This workflow never force-pushes.
 #
-# Setup: repository secret FRED_API_KEY (optional BLS_API_KEY), and in Settings > Actions > General
+# Setup: repository secret FRED_API_KEY (optional BLS_API_KEY; optional ANTHROPIC_API_KEY for the AI
+# draft and audit, with optional variable ANTHROPIC_MODEL), and in Settings > Actions > General
 # turn on "Allow GitHub Actions to create and approve pull requests".
 
 name: Monthly edition update
@@ -49,6 +55,8 @@ jobs:
     env:
       FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
       GH_TOKEN: ${{ github.token }}
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
@@ -91,13 +99,13 @@ jobs:
           fi
 
           # On owner pushes, rebuild only when inputs changed (manual YAML, raw data, config).
-          # If only the edition JSON changed (text edits, "status": "ready"), validate it as is so
-          # the rebuild can't overwrite those edits.
+          # If only the edition JSON (or the AI draft) changed (text edits, "status": "ready"),
+          # validate it as is so the rebuild can't overwrite those edits.
           REBUILD=1
           if [ "$EVENT" = "push" ] && [ -n "$BEFORE" ] && ! [[ "$BEFORE" =~ ^0+$ ]]; then
             CHANGED=$(git diff --name-only "$BEFORE" "$GITHUB_SHA" || echo "unknown")
             echo "Changed files:"; echo "$CHANGED"
-            if [ -n "$CHANGED" ] && ! echo "$CHANGED" | grep -qv '^data/editions/'; then
+            if [ -n "$CHANGED" ] && ! echo "$CHANGED" | grep -qvE '^data/(editions|drafts)/'; then
               REBUILD=0
             fi
           fi
@@ -159,6 +167,13 @@ jobs:
             echo "::warning::build:edition exited $CODE (usually stale required manual fields). The PR still opens so they can be filled in."
           fi
 
+      # Optional (spec 12.1 step 5): one or two Claude API calls; never fails the run.
+      - name: Draft the summary with AI (optional)
+        id: draft
+        if: steps.ed.outputs.stop != '1' && github.event_name != 'push' && env.ANTHROPIC_API_KEY != ''
+        continue-on-error: true
+        run: npm run draft-summary -- "${{ steps.ed.outputs.id }}"
+
       - name: Validate
         id: validate
         if: steps.ed.outputs.stop != '1'
@@ -173,6 +188,13 @@ jobs:
             { echo "Validation did not produce a report (exit $CODE). Log:"; echo '```'; tail -n 60 "out/validate-$ID.log"; echo '```'; } > "out/validation-$ID.md"
           fi
           echo "status=$CODE" >> "$GITHUB_OUTPUT"
+
+      # Optional (spec 14.4): a separate Claude call reviews the edition and draft; it only reports.
+      - name: Independent AI audit (optional)
+        id: audit
+        if: steps.ed.outputs.stop != '1' && github.event_name != 'push' && env.ANTHROPIC_API_KEY != ''
+        continue-on-error: true
+        run: npm run audit -- "${{ steps.ed.outputs.id }}" --out "out/audit-${{ steps.ed.outputs.id }}.md"
 
       - name: Commit and push to the edition branch
         if: steps.ed.outputs.stop != '1'
@@ -202,7 +224,12 @@ jobs:
           ID: ${{ steps.ed.outputs.id }}
         run: |
           COMMON=(--report "out/validation-$ID.md" --build-log "out/build-$ID.log" --build-status "${{ steps.build.outputs.status }}" --validate-status "${{ steps.validate.outputs.status }}")
-          npx tsx scripts/edition-pr-body.ts "$ID" --kind body --out "out/pr-body-$ID.md" "${COMMON[@]}"
+          # Optional AI sections: the file when the step succeeded, a "no output" note when it failed
+          # (so an older draft on the branch is not shown as this month's), nothing when skipped.
+          AI=()
+          case "${{ steps.draft.outcome }}" in success) AI+=(--draft "data/drafts/$ID-summary.md");; failure) AI+=(--draft "");; esac
+          case "${{ steps.audit.outcome }}" in success) AI+=(--audit "out/audit-$ID.md");; failure) AI+=(--audit "");; esac
+          npx tsx scripts/edition-pr-body.ts "$ID" --kind body --out "out/pr-body-$ID.md" "${COMMON[@]}" "${AI[@]}"
           npx tsx scripts/edition-pr-body.ts "$ID" --kind comment --out "out/pr-comment-$ID.md" "${COMMON[@]}"
 
       - name: Open or update the pull request

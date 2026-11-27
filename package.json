@@ -13,9 +13,12 @@
     "pdf": "tsx scripts/render-pdf.ts",
     "manual-template": "tsx scripts/make-manual-template.ts",
     "build:edition": "tsx scripts/build-edition.ts",
-    "validate": "tsx scripts/validate-edition.ts"
+    "validate": "tsx scripts/validate-edition.ts",
+    "draft-summary": "tsx scripts/draft-summary.ts",
+    "audit": "tsx scripts/audit-edition.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
     "js-yaml": "^5.5.0",
     "next": "15.5.29",
     "react": "19.1.0",
