@@ -1,0 +1,28 @@
+{
+  "_note": "SYNTHETIC TEST DATA in the ONS time-series JSON shape (series MGSX, dataset LMS). Not real ONS data. Only the latest value (2026 JUL-SEP = 4.6) matches the November 2026 edition; the year-ago value (2025 JUL-SEP = 5.0) and all other values are made up. \"2026 JAN-MAR\" is deliberately missing (empty string).",
+  "description": { "cdid": "MGSX", "title": "Unemployment rate (aged 16 and over, seasonally adjusted): %", "unit": "%", "date": "2026 JUL-SEP", "number": "4.6", "releaseDate": "2026-11-11T00:00:00.000Z", "datasetId": "LMS" },
+  "years": [
+    { "date": "2025", "value": "5.0", "label": "2025", "year": "2025", "month": "", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" }
+  ],
+  "quarters": [
+    { "date": "2025 Q3", "value": "5.0", "label": "2025 Q3", "year": "2025", "month": "", "quarter": "Q3", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 Q3", "value": "4.6", "label": "2026 Q3", "year": "2026", "month": "", "quarter": "Q3", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" }
+  ],
+  "months": [
+    { "date": "2025 MAY-JUL", "value": "4.8", "label": "2025 MAY-JUL", "year": "2025", "month": "May-July", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 JUN-AUG", "value": "4.9", "label": "2025 JUN-AUG", "year": "2025", "month": "June-August", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 JUL-SEP", "value": "5.0", "label": "2025 JUL-SEP", "year": "2025", "month": "July-September", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 AUG-OCT", "value": "5.0", "label": "2025 AUG-OCT", "year": "2025", "month": "August-October", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 SEP-NOV", "value": "5.1", "label": "2025 SEP-NOV", "year": "2025", "month": "September-November", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 OCT-DEC", "value": "5.1", "label": "2025 OCT-DEC", "year": "2025", "month": "October-December", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 NOV-JAN", "value": "5.0", "label": "2025 NOV-JAN", "year": "2025", "month": "November-January", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2025 DEC-FEB", "value": "4.9", "label": "2025 DEC-FEB", "year": "2025", "month": "December-February", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 JAN-MAR", "value": "", "label": "2026 JAN-MAR", "year": "2026", "month": "January-March", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 FEB-APR", "value": "4.8", "label": "2026 FEB-APR", "year": "2026", "month": "February-April", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 MAR-MAY", "value": "4.7", "label": "2026 MAR-MAY", "year": "2026", "month": "March-May", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 APR-JUN", "value": "4.7", "label": "2026 APR-JUN", "year": "2026", "month": "April-June", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 MAY-JUL", "value": "4.6", "label": "2026 MAY-JUL", "year": "2026", "month": "May-July", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 JUN-AUG", "value": "4.6", "label": "2026 JUN-AUG", "year": "2026", "month": "June-August", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" },
+    { "date": "2026 JUL-SEP", "value": "4.6", "label": "2026 JUL-SEP", "year": "2026", "month": "July-September", "quarter": "", "sourceDataset": "LMS", "updateDate": "2026-11-11T00:00:00.000Z" }
+  ]
+}

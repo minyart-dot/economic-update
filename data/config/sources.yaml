@@ -381,3 +381,5 @@ sources:
     url: "https://fred.stlouisfed.org/series/DFEDTARU"
   - phrase: "FRED consumer sentiment"
     url: "https://fred.stlouisfed.org/series/UMCSENT"
+  - phrase: "ONS UK unemployment rate (MGSX)"
+    url: "https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/lms"

@@ -11,6 +11,7 @@ import { APARTMENTLIST_SOURCE_URL, computeRent, defaultApartmentListUrl, fetchAp
 import { computeEurostatMetric, EUROSTAT_METRICS, EUROSTAT_SOURCE_URL, fetchEurostat, type JsonStat } from "./eurostat";
 import { computeFredMetric, computeYtd, fredClient, fredIds, fredSeriesUrl, FRED_METRO_PERMITS } from "./fred";
 import { redact, type HttpOptions } from "./http";
+import { computeOnsMetric, fetchOns, ONS_METRICS } from "./ons";
 import type { AutoFile, AutoRecord, Computed, Obs, SaveRaw } from "./types";
 
 export interface RunOptions {
@@ -139,6 +140,9 @@ export async function runFetch(o: RunOptions): Promise<AutoFile> {
     }
     if (id in EUROSTAT_METRICS) return async () => toRecord(computeEurostatMetric(await getEurostat(), id), EUROSTAT_SOURCE_URL);
     if (id in RENT_LOCATIONS) return async () => toRecord(computeRent(await rentSeries(id)), APARTMENTLIST_SOURCE_URL);
+    // --- ONS (uk_unemployment, series MGSX) ---
+    if (id in ONS_METRICS) return async () => toRecord(computeOnsMetric(await fetchOns(id, o.http, saveRaw)), ONS_METRICS[id].sourceUrl);
+    // --- end ONS ---
     return null;
   };
 
