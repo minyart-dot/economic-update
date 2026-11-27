@@ -1,0 +1,9 @@
+{
+  "generated_at": "2030-02-25T12:00:00Z",
+  "edition": "2030-02",
+  "metrics": {
+    "rate_a": { "value": 4.0, "period": "2030-01", "period_label": "Jan", "year_ago": 5.0, "year_ago_period": "2029-01", "as_of": "2030-01", "source_url": "https://example.com/rate-a", "stale": false, "error": null },
+    "price_b": { "value": 110, "period": "2030-01", "period_label": "Jan", "year_ago": 100, "year_ago_period": "2029-01", "as_of": "2030-01", "source_url": "https://example.com/price-b", "stale": false, "error": null },
+    "auto_f": { "value": null, "period": "2029-12", "period_label": "Dec", "year_ago": null, "year_ago_period": null, "as_of": "2029-12", "source_url": "https://example.com/auto-f", "stale": true, "error": "HTTP 503 (synthetic)" }
+  }
+}

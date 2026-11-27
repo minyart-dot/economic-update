@@ -1,0 +1,18 @@
+# Section order on the edition page (spec Section 3.2). Matches the PDF edition.
+sections:
+  - { id: summary,        number: "",   title: "State of the Market",                                  kicker: "Monthly Brief for Real Estate Investors",                           nav: "Summary" }
+  - { id: key-indicators, number: "01", title: "Key indicators",                                       kicker: "Latest reading vs. a year ago and pre-pandemic 2019",              nav: "Key indicators" }
+  - { id: story,          number: "◆",  title: "Reading the data together",                            kicker: "How the indicators relate and what has historically moved together. No forecast is made", nav: "Reading together" }
+  - { id: twenty-year,    number: "02", title: "The 20-year view",                                     kicker: "Long history so one recent year does not skew the picture",        nav: "20-year view" }
+  - { id: jobs-ai,        number: "03", title: "Jobs and AI",                                          kicker: "Announced layoffs and the share companies attribute to AI",        nav: "Jobs and AI" }
+  - { id: credit,         number: "04", title: "Household credit",                                     kicker: "Late payments and defaults rather than total debt",                nav: "Household credit" }
+  - { id: rates,          number: "05", title: "Rates, markets and AI investment",                     kicker: "Borrowing costs and the AI capital spending cycle",                nav: "Rates and markets" }
+  - { id: gauges,         number: "5b", title: "Market risk gauges",                                   kicker: "Yield curve, stock-market volatility (VIX) and the U.S. dollar",   nav: "Risk gauges" }
+  - { id: housing,        number: "06", title: "Housing, building permits and manufactured homes",     kicker: "Permits signal construction several months ahead",                 nav: "Housing" }
+  - { id: inventory,      number: "6b", title: "Months of inventory",                                  kicker: "How long current supply would take to sell at today's pace",       nav: "Months of inventory" }
+  - { id: cre,            number: "07", title: "Commercial real estate",                               kicker: "Office, industrial and retail vacancy and office occupancy",       nav: "Commercial" }
+  - { id: tx-metros,      number: "08", title: "Texas metros",                                         kicker: "Dallas–Fort Worth, Houston, Austin and San Antonio",               nav: "Texas metros" }
+  - { id: texas,          number: "09", title: "Texas statewide",                                      kicker: "Statewide distress, permits and manufactured housing",             nav: "Texas statewide" }
+  - { id: europe,         number: "10", title: "Europe",                                               kicker: "Labor and business conditions abroad",                             nav: "Europe" }
+  - { id: watch,          number: "11", title: "What to watch",                                        kicker: "Reference levels and upcoming releases",                           nav: "What to watch" }
+  - { id: references,     number: "12", title: "References",                                           kicker: "Every source used in this edition; each is a clickable link",      nav: "References" }
