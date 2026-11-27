@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { lastAlertLine } from "@/lib/alerts";
 import { fmtR, metroPermitStats } from "@/lib/analytics";
 import { buildChartData } from "@/lib/chartData";
 import { colorFor, computeChange } from "@/lib/compare";
@@ -79,6 +80,8 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
   const s = ed.sections;
   const tx = ed.history.tx;
   const charts = buildChartData(ed);
+  // Between-edition volatility email alerts (data/alerts.json); only meaningful on the current edition.
+  const lastAlert = isLatest ? lastAlertLine() : null;
   const nav = loadSections().map((x) => ({ id: x.id, number: x.number || "•", label: x.nav, topics: SECTION_TOPICS[x.id] }));
 
   // Key indicators: group label rows + metric rows.
@@ -255,6 +258,7 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
           {/* 8 · Market risk gauges */}
           <Section id="gauges">
             <AlertBanner alert={ed.alert} variant="full" />
+            {lastAlert && <p className="text-[12px] text-muted">{lastAlert}</p>}
             <Tiles tiles={ed.tiles.gauges} metrics={m} />
             <Figure id="C17" payload={charts.C17} />
             <BulletList bullets={s.gauges.bullets} />
