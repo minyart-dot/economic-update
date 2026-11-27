@@ -15,7 +15,7 @@ The full build spec is `STATE_OF_THE_MARKET_SPEC.md` (text) and `docs/State_of_t
 | — | Reader topic filter ("Choose topics", saved in the reader's browser) | Done |
 | 5 | Monthly data PR workflow, PDF, `/sources` | Done: `monthly-update.yml`, `npm run pdf`, PDF + email publish flow in `newsletter.yml`, `/sources`; the workflows have not run on GitHub yet |
 | 6 | VIX alert emails, link-preview images, analytics, AI drafting + audit | Done (optional features; each switches on with its key) |
-| 6 | Admin form for monthly entry | In progress |
+| 6 | Admin form for monthly entry (`/admin`, password-protected) | Done; tested against a GitHub stand-in |
 | — | Archive: site tabs, Editions dropdown, `/archive` with summaries; archived pages frozen as published | Done |
 | Later | Accounts and personal metric alerts | Planned, see `docs/ROADMAP.md` |
 
@@ -156,6 +156,8 @@ quietly (with a warning in the Actions log) when they don't. Never commit real v
 | `ANTHROPIC_API_KEY` | GitHub secret | AI-drafted summary and audit in the monthly PR | Optional |
 | `ANTHROPIC_MODEL` | GitHub variable | Override the AI model | Optional |
 | `VIX_ALERT_THRESHOLD` | GitHub variable | Volatility alert level (default 30) | Optional |
+| `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | Vercel env | `/admin` form login (secret: 32+ random characters) | Optional (form hidden without them) |
+| `GITHUB_TOKEN`, `GITHUB_REPOSITORY` | Vercel env | `/admin` saves to the edition branch (fine-grained token, this repo only) | Optional (form hidden without them) |
 
 Also in GitHub: Settings > Actions > General > Workflow permissions > **Allow GitHub Actions to create and approve pull
 requests**.
