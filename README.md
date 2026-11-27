@@ -151,6 +151,27 @@ email includes it. It is also served at `/edition/YYYY-MM.pdf`.
 Playwright is a dev dependency pinned to 1.63.0; locally it needs its Chromium (`npx playwright install chromium`
 once). CI installs it with `npx playwright install --with-deps chromium`.
 
+## Volatility alerts
+
+Between editions, subscribers who ticked **"Also send me market alerts"** (Buttondown tag `alerts`) get a short email
+when the VIX closes at or above **30**: "Market volatility alert: the VIX closed at {v} on {date}, above 30. This is
+an automated data notice, not advice.", the alert level (high at 30, extreme at 40), the thresholds line and a link to
+the gauges section. No forecasts or recommendations. **At most one alert every 5 trading days** (weekdays; market
+holidays are counted as trading days). Other subscribers never get it.
+
+- `.github/workflows/vix-alert.yml` runs weekdays at 21:30 UTC (4:30pm Central in winter, 5:30pm in summer). It
+  reads FRED `VIXCLS`, or Cboe's daily CSV when FRED has not posted the day's close yet. After a send it commits
+  the entry to `data/alerts.json` (`[skip ci]`), and the latest edition's gauges section shows "Last alert: {date}
+  (VIX {v})". It skips with a warning until `BUTTONDOWN_API_KEY`, `FRED_API_KEY` and `SITE_URL` are set. Optional
+  repository variable `VIX_ALERT_THRESHOLD` changes the level.
+- Sending is restricted to the tag with Buttondown's email `filters` field. The script first saves a draft, checks
+  that Buttondown kept the `alerts`-only audience, and only then sends; if not, it sends nothing and the run fails.
+- **Test before relying on it:** Actions > "VIX alert" > Run workflow with mode **check** (prints the latest close
+  and the decision) or **dry-run** (creates a Buttondown draft if the rule fires; nothing is sent). Locally:
+  `npm run vix-alert` (check), `npm run vix-alert -- --dry-run --force` (always creates a draft marked `[TEST]`) and
+  then open the draft in Buttondown and confirm its audience is only subscribers tagged `alerts`. Delete the test
+  draft afterwards. `--date YYYY-MM-DD` and `--threshold N` are also accepted.
+
 ## Sources
 
 `/sources` lists every source used in the latest edition, grouped by section and de-duplicated (the same list as the
