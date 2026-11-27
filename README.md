@@ -14,7 +14,9 @@ The full build spec is `STATE_OF_THE_MARKET_SPEC.md` (text) and `docs/State_of_t
 | 4 | Email signup (top of page + footer), Buttondown, monthly email, send workflow | Done; needs the accounts below to go live |
 | — | Reader topic filter ("Choose topics", saved in the reader's browser) | Done |
 | 5 | Monthly data PR workflow, PDF, `/sources` | Done: `monthly-update.yml`, `npm run pdf`, PDF + email publish flow in `newsletter.yml`, `/sources`; the workflows have not run on GitHub yet |
-| 6 | VIX alert emails, admin form, analytics, OG images | Optional |
+| 6 | VIX alert emails, link-preview images, analytics, AI drafting + audit | Done (optional features; each switches on with its key) |
+| 6 | Admin form for monthly entry | In progress |
+| — | Archive: site tabs, Editions dropdown, `/archive` with summaries; archived pages frozen as published | Done |
 | Later | Accounts and personal metric alerts | Planned, see `docs/ROADMAP.md` |
 
 ## Run locally
@@ -138,6 +140,25 @@ The site is public, free and needs no login. Two free accounts make it live:
 4. Test: run Actions > "Monthly newsletter" > Run workflow with mode **dry-run**. It renders the PDF (attached to the
    run, not committed) and creates a draft in Buttondown (nothing is sent) so you can preview it and send a test to
    yourself. Run Actions > "Monthly edition update" > Run workflow to try the monthly PR.
+
+## Settings at a glance
+
+Nothing here is required to view the site locally. Each feature switches itself on when its settings exist and skips
+quietly (with a warning in the Actions log) when they don't. Never commit real values; `.env.example` lists them.
+
+| Setting | Where | Needed for | Required? |
+|---|---|---|---|
+| `SITE_URL` | Vercel env + GitHub variable | Links in emails, sitemap, link previews | Yes, to go live |
+| `BUTTONDOWN_API_KEY` | Vercel env + GitHub secret | Email signup, monthly email, volatility alerts | Yes, for email |
+| `FRED_API_KEY` | GitHub secret | Monthly data fetch, volatility alerts | Yes, for automatic data |
+| `APARTMENTLIST_CSV_URL` | GitHub variable/secret | Rent data (Apartment List renames the file monthly) | Recommended |
+| `BLS_API_KEY` | GitHub secret | Higher BLS rate limits | Optional |
+| `ANTHROPIC_API_KEY` | GitHub secret | AI-drafted summary and audit in the monthly PR | Optional |
+| `ANTHROPIC_MODEL` | GitHub variable | Override the AI model | Optional |
+| `VIX_ALERT_THRESHOLD` | GitHub variable | Volatility alert level (default 30) | Optional |
+
+Also in GitHub: Settings > Actions > General > Workflow permissions > **Allow GitHub Actions to create and approve pull
+requests**.
 
 ## The monthly routine
 
