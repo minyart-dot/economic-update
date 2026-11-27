@@ -25,7 +25,7 @@ export function HeaderBand({ editionLabel, dataAsOf }: { editionLabel: string; d
           </div>
           <a
             href="#subscribe"
-            className="no-print rounded-md bg-orange px-3 py-1.5 text-[13px] font-semibold text-white hover:bg-[#c96a22] focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="no-print rounded-md bg-orange px-3 py-1.5 text-[13px] font-bold text-navy hover:bg-[#ea8d47] focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             Subscribe free
           </a>

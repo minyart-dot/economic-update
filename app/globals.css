@@ -100,6 +100,18 @@ body {
   .table-scroll {
     overflow: visible !important;
   }
+  /* Charts are sized for the screen; scale them to the printed column. */
+  .chart-box {
+    height: auto !important;
+  }
+  .chart-box svg.recharts-surface {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .recharts-wrapper {
+    width: 100% !important;
+    height: auto !important;
+  }
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;

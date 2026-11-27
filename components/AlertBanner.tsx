@@ -2,8 +2,8 @@ import type { AlertLevel, MarketAlert } from "@/lib/types";
 
 const STYLE: Record<AlertLevel, string> = {
   normal: "border-good bg-good-bg text-good-text",
-  elevated: "border-alert-amber bg-[#fdf3e3] text-alert-amber",
-  high: "border-alert-red bg-bad-bg text-alert-red",
+  elevated: "border-alert-amber bg-[#fdf3e3] text-ink",
+  high: "border-alert-red bg-bad-bg text-bad-text",
   extreme: "border-alert-extreme bg-alert-extreme text-white",
 };
 
@@ -15,13 +15,12 @@ export function AlertBanner({ alert, variant = "full" }: { alert: MarketAlert; v
     return (
       <a
         href="#gauges"
-        role="status"
         className={`block rounded-md border-l-4 px-3 py-2 text-[13px] font-semibold hover:underline ${STYLE[alert.level]}`}
       >
         {head}
         {alert.level === "normal" ? ", below 20." : ", above 20."}
         {inversion}{" "}
-        <span className="font-normal opacity-90">
+        <span className="font-normal">
           Alert levels: 20 elevated · 30 high · 40 extreme.
         </span>
       </a>
@@ -33,7 +32,7 @@ export function AlertBanner({ alert, variant = "full" }: { alert: MarketAlert; v
         {alert.text}
         {inversion}
       </p>
-      <p className="mt-0.5 text-[12px] opacity-90">{alert.thresholds}</p>
+      <p className="mt-0.5 text-[12px]">{alert.thresholds}</p>
     </div>
   );
 }

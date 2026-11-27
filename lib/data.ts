@@ -21,6 +21,19 @@ export const loadSources = () => readYaml<{ sources: SourceEntry[] }>("config/so
 export const loadUsAnnual = () => readJson<UsAnnual>("history/us_annual.json");
 export const loadTexasAnnual = () => readJson<TexasAnnual>("history/texas_annual.json");
 
+export interface ChallengerHistory {
+  challenger_job_cuts: { years: string[]; total: number[]; ai_cited: number[] };
+  ai_cited_cuts_monthly: Record<string, (number | null)[] | number>;
+}
+export interface GaugesHistory {
+  years_2006_2026ytd: number[];
+  yield_curve_10y2y_annual_avg_2006_2026ytd: number[];
+  vix_annual_avg_2006_2026ytd: number[];
+  broad_dollar_annual_avg_2006_2025: number[];
+}
+export const loadChallenger = () => readJson<ChallengerHistory>("history/challenger.json");
+export const loadGauges = () => readJson<GaugesHistory>("history/gauges.json");
+
 export function listEditions(): string[] {
   return fs
     .readdirSync(path.join(DATA, "editions"))

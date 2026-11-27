@@ -44,7 +44,7 @@ export function SubscribeForm({ compact = false, id }: { compact?: boolean; id?:
           Also send me market alerts when volatility spikes
         </label>
       )}
-      <p className="mt-1.5 text-[12px] text-muted">
+      <p className="mt-1.5 text-[12px] text-dark">
         One email a month. Unsubscribe anytime. We only use your email to send this brief. No sharing.
       </p>
     </form>

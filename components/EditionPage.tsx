@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { fmtR, metroPermitStats } from "@/lib/analytics";
+import { buildChartData } from "@/lib/chartData";
 import { colorFor, computeChange } from "@/lib/compare";
 import { loadSections, loadTexasAnnual } from "@/lib/data";
 import { formatInt, formatPctChange, hostname } from "@/lib/format";
@@ -59,6 +60,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
   const m = ed.metrics;
   const s = ed.sections;
   const tx = loadTexasAnnual();
+  const charts = buildChartData(ed);
   const nav = loadSections().map((x) => ({ id: x.id, number: x.number || "•", label: x.nav }));
 
   // Key indicators: group label rows + metric rows.
@@ -139,7 +141,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
                 </div>
               ))}
             </div>
-            <Figure id="C15" />
+            <Figure id="C15" payload={charts.C15} />
             <div>
               <H3>How the series have moved together (annual, 2006–2025)</H3>
               <DataTable
@@ -154,11 +156,11 @@ export function EditionPage({ ed }: { ed: Edition }) {
                     c.label,
                     <span key="r" className="font-semibold">
                       {fmtR(c.r)}
-                      <span className="block text-[11px] font-normal text-muted">n = {c.n}</span>
+                      <span className="block text-[11px] font-normal text-dark">n = {c.n}</span>
                     </span>,
                     <span key="p">
                       {c.plain}
-                      {c.note && <span className="block text-[11px] text-muted">{c.note}</span>}
+                      {c.note && <span className="block text-[11px] text-dark">{c.note}</span>}
                     </span>,
                   ],
                 }))}
@@ -171,11 +173,11 @@ export function EditionPage({ ed }: { ed: Edition }) {
           <Section id="twenty-year">
             <TwoCol>
               <div className="space-y-3">
-                <Figure id="C1" />
+                <Figure id="C1" payload={charts.C1} />
                 <BulletList bullets={s["twenty-year"].c1_bullets} className="text-[14px]" />
               </div>
               <div className="space-y-3">
-                <Figure id="C2" />
+                <Figure id="C2" payload={charts.C2} />
                 <BulletList bullets={s["twenty-year"].c2_bullets} className="text-[14px]" />
               </div>
             </TwoCol>
@@ -183,16 +185,16 @@ export function EditionPage({ ed }: { ed: Edition }) {
 
           {/* 5 · Jobs and AI */}
           <Section id="jobs-ai">
-            <Figure id="C3" />
-            <Figure id="C4" />
+            <Figure id="C3" payload={charts.C3} />
+            <Figure id="C4" payload={charts.C4} />
             <BulletList bullets={s["jobs-ai"].bullets} />
           </Section>
 
           {/* 6 · Household credit */}
           <Section id="credit">
             <TwoCol>
-              <Figure id="C5" />
-              <Figure id="C6" />
+              <Figure id="C5" payload={charts.C5} />
+              <Figure id="C6" payload={charts.C6} />
             </TwoCol>
             <BulletList bullets={s.credit.bullets} />
           </Section>
@@ -207,7 +209,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
           <Section id="gauges">
             <AlertBanner alert={ed.alert} variant="full" />
             <Tiles tiles={ed.tiles.gauges} metrics={m} />
-            <Figure id="C17" />
+            <Figure id="C17" payload={charts.C17} />
             <BulletList bullets={s.gauges.bullets} />
             <DataTable
               columns={[
@@ -225,7 +227,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
 
           {/* 9 · Housing, permits, manufactured homes */}
           <Section id="housing">
-            <Figure id="C7" />
+            <Figure id="C7" payload={charts.C7} />
             <TwoCol>
               <div>
                 <H3>Building permits</H3>
@@ -237,7 +239,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
               </div>
             </TwoCol>
             <TwoCol>
-              <Figure id="C8" />
+              <Figure id="C8" payload={charts.C8} />
               <div className="lg:pt-7">
                 <H3>Manufactured homes</H3>
                 <BulletList bullets={s.housing.mh_bullets} className="text-[14px]" />
@@ -250,7 +252,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
             <Callout title="How to read it">
               <p>{s.inventory.how_to_read}</p>
             </Callout>
-            <Figure id="C16" />
+            <Figure id="C16" payload={charts.C16} />
             <DataTable
               columns={[
                 { header: "Market", className: "min-w-[150px]" },
@@ -281,12 +283,12 @@ export function EditionPage({ ed }: { ed: Edition }) {
           <Section id="cre">
             <Tiles tiles={ed.tiles.cre} metrics={m} />
             <TwoCol>
-              <Figure id="C9" />
-              <Figure id="C10" />
+              <Figure id="C9" payload={charts.C9} />
+              <Figure id="C10" payload={charts.C10} />
             </TwoCol>
             <BulletList bullets={s.cre.bullets} />
             <TwoCol>
-              <Figure id="C11" />
+              <Figure id="C11" payload={charts.C11} />
               <div className="lg:pt-7">
                 <H3>Texas commercial</H3>
                 <BulletList bullets={s.cre.texas_bullets} className="text-[14px]" />
@@ -336,10 +338,10 @@ export function EditionPage({ ed }: { ed: Edition }) {
               })}
             />
             <NoteBox>{ed.notes.tx_metros} Permits 2019 and peak year are computed from the annual FRED series.</NoteBox>
-            <Figure id="C12" />
+            <Figure id="C12" payload={charts.C12} />
             <TwoCol>
-              <Figure id="C13" />
-              <Figure id="C14" />
+              <Figure id="C13" payload={charts.C13} />
+              <Figure id="C14" payload={charts.C14} />
             </TwoCol>
             <BulletList bullets={s["tx-metros"].bullets} />
           </Section>
