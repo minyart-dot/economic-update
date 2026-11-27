@@ -34,6 +34,48 @@ export interface GaugesHistory {
 export const loadChallenger = () => readJson<ChallengerHistory>("history/challenger.json");
 export const loadGauges = () => readJson<GaugesHistory>("history/gauges.json");
 
+/** Every long series the charts and correlations use. */
+export interface HistoryBundle {
+  us: UsAnnual;
+  tx: TexasAnnual;
+  challenger: ChallengerHistory;
+  gauges: GaugesHistory;
+}
+
+export const historySnapshotPath = (id: string) => path.join(DATA, "editions", `${id}.history.json`);
+
+export function loadLiveHistory(): HistoryBundle {
+  return { us: loadUsAnnual(), tx: loadTexasAnnual(), challenger: loadChallenger(), gauges: loadGauges() };
+}
+
+/**
+ * History as it was when the edition was published (data/editions/YYYY-MM.history.json),
+ * so archived editions never change when /data/history is appended (spec 17: archive pages stay
+ * unchanged). Editions without a snapshot (drafts, the month being prepared) use the live files.
+ */
+export function historyFor(id: string): { history: HistoryBundle; snapshot: boolean } {
+  const p = historySnapshotPath(id);
+  if (fs.existsSync(p)) {
+    const snap = JSON.parse(fs.readFileSync(p, "utf8"));
+    return { history: snap.history as HistoryBundle, snapshot: true };
+  }
+  return { history: loadLiveHistory(), snapshot: false };
+}
+
+/** Writes the snapshot for an edition. Refuses to overwrite unless force is set. */
+export function freezeHistory(id: string, force = false): boolean {
+  const p = historySnapshotPath(id);
+  if (fs.existsSync(p) && !force) return false;
+  const body = {
+    _notes: `Snapshot of data/history/* taken when edition ${id} was published, so its charts and correlations stay as published. Do not edit.`,
+    edition: id,
+    frozen_at: new Date().toISOString(),
+    history: loadLiveHistory(),
+  };
+  fs.writeFileSync(p, JSON.stringify(body, null, 1) + "\n");
+  return true;
+}
+
 export function listEditions(): string[] {
   return fs
     .readdirSync(path.join(DATA, "editions"))

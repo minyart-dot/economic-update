@@ -3,7 +3,6 @@
 // plain-language aria summary. No values are created here; only unit conversions
 // (e.g. units -> thousands) and shares computed from published numbers.
 
-import { loadChallenger, loadGauges, loadTexasAnnual, loadUsAnnual } from "./data";
 import { formatInt } from "./format";
 import type { Edition } from "./types";
 
@@ -34,10 +33,8 @@ export const METRO_KEYS = [
 ] as const;
 
 export function buildChartData(ed: Edition): Record<string, ChartPayload> {
-  const us = loadUsAnnual();
-  const tx = loadTexasAnnual();
-  const ch = loadChallenger();
-  const g = loadGauges();
+  // The edition's own history (frozen snapshot once published).
+  const { us, tx, challenger: ch, gauges: g } = ed.history;
   const years = us.years_2006_2025;
   const last = years.length - 1;
 

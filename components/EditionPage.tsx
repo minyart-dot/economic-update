@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { fmtR, metroPermitStats } from "@/lib/analytics";
 import { buildChartData } from "@/lib/chartData";
 import { colorFor, computeChange } from "@/lib/compare";
-import { loadSections, loadTexasAnnual } from "@/lib/data";
+import { loadSections } from "@/lib/data";
 import { pdfHref } from "@/lib/pdf";
 import { formatInt, formatPctChange, hostname } from "@/lib/format";
 import { GLOSSARY } from "@/lib/glossary";
@@ -77,7 +77,7 @@ function TwoCol({ children }: { children: ReactNode }) {
 export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: boolean }) {
   const m = ed.metrics;
   const s = ed.sections;
-  const tx = loadTexasAnnual();
+  const tx = ed.history.tx;
   const charts = buildChartData(ed);
   const nav = loadSections().map((x) => ({ id: x.id, number: x.number || "•", label: x.nav, topics: SECTION_TOPICS[x.id] }));
 

@@ -274,4 +274,7 @@ export interface Edition extends Omit<EditionSeed, "metrics"> {
   correlations: Correlation[];
   alert: MarketAlert;
   references: ReferenceGroup[];
+  /** Long series for charts: the edition's frozen snapshot if it has one, else the live files. */
+  history: import("./data").HistoryBundle;
+  history_snapshot: boolean;
 }

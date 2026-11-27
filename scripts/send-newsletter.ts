@@ -16,7 +16,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createEmail } from "../lib/buttondown";
-import { listEditions, loadEditionSeed } from "../lib/data";
+import { freezeHistory, listEditions, loadEditionSeed } from "../lib/data";
 import { getEdition } from "../lib/edition";
 import { buildNewsletter } from "../lib/newsletter";
 import { pdfHref } from "../lib/pdf";
@@ -84,6 +84,8 @@ async function main() {
   raw.status = "published";
   fs.writeFileSync(file, JSON.stringify(raw, null, 2) + "\n");
   console.log(`Sent. Recorded newsletter_sent_at in data/editions/${id}.json.`);
+  // Freeze the chart history so this edition's archive page never changes (spec 17).
+  if (freezeHistory(id)) console.log(`Froze chart history in data/editions/${id}.history.json.`);
 }
 
 async function waitForPage(url: string, minutes = 15) {
