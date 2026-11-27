@@ -65,6 +65,10 @@ export interface AutoMetric {
   year_ago_period?: string | null;
   as_of: string;
   source_url?: string;
+  /** Optional formatting/context from the fetcher (e.g. fed_funds "3.75–4.00%", payrolls "+165,000"). */
+  display?: string;
+  year_ago_display?: string;
+  notes?: string;
   stale?: boolean;
   error?: string | null;
 }

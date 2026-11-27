@@ -163,3 +163,20 @@ test("build: rebuilding a frozen edition is stable (frozen format loads like the
   const b = enrichMetrics(next.edition!, cfg);
   for (const id of Object.keys(a)) assert.deepEqual(b[id], a[id], id);
 });
+
+test("build: keeps display and notes supplied by a fetcher (e.g. fed funds range, payrolls average)", () => {
+  const root = tempFixture();
+  const autoPath = path.join(root, "data/raw/2030-02/auto.json");
+  const auto = JSON.parse(fs.readFileSync(autoPath, "utf8"));
+  auto.metrics.rate_a.display = "3.75–4.00%";
+  auto.metrics.rate_a.year_ago_display = "4.00–4.25%";
+  auto.metrics.rate_a.notes = "Prior 12-month average 48,000.";
+  writeFile(root, "data/raw/2030-02/auto.json", JSON.stringify(auto));
+  const res = buildEdition({ root, id: "2030-02", now: NOW });
+  assert.equal(res.ok, true, res.errors.join("\n"));
+  const m = res.edition!.metrics.rate_a;
+  assert.equal(m.display, "3.75–4.00%");
+  assert.equal(m.year_ago_display, "4.00–4.25%");
+  assert.equal(m.notes, "Prior 12-month average 48,000.");
+  assert.ok(!res.needsReview.some((r) => r.includes("rate_a") && r.includes("notes copied")), "fresh notes are not flagged as copied");
+});

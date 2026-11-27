@@ -81,15 +81,22 @@ interface Update {
   footnote?: string | null;
 }
 
-const fromAuto = (a: AutoMetric): Update => ({
-  value: a.value,
-  period: a.period,
-  period_label: a.period_label,
-  year_ago: a.year_ago ?? null,
-  year_ago_period: a.year_ago_period ?? null,
-  as_of: a.as_of,
-  source_url: a.source_url,
-});
+const fromAuto = (a: AutoMetric): Update => {
+  const u: Update = {
+    value: a.value,
+    period: a.period,
+    period_label: a.period_label,
+    year_ago: a.year_ago ?? null,
+    year_ago_period: a.year_ago_period ?? null,
+    as_of: a.as_of,
+    source_url: a.source_url,
+  };
+  // Carry fetcher-provided formatting and context (fed_funds range, payrolls sign and 12-month average).
+  if (a.display) u.display = a.display;
+  if (a.year_ago_display) u.year_ago_display = a.year_ago_display;
+  if (a.notes) u.notes = a.notes;
+  return u;
+};
 
 function fromManual(m: ManualEntry): Update {
   const u: Update = {

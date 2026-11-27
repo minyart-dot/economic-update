@@ -12,6 +12,7 @@ import { computeEurostatMetric, EUROSTAT_METRICS, EUROSTAT_SOURCE_URL, fetchEuro
 import { computeFredMetric, computeYtd, fredClient, fredIds, fredSeriesUrl, FRED_METRO_PERMITS } from "./fred";
 import { redact, type HttpOptions } from "./http";
 import { computeOnsMetric, fetchOns, ONS_METRICS } from "./ons";
+import { fetchPayrolls, PAYROLLS_METRIC } from "./payrolls";
 import type { AutoFile, AutoRecord, Computed, Obs, SaveRaw } from "./types";
 
 export interface RunOptions {
@@ -132,6 +133,8 @@ export async function runFetch(o: RunOptions): Promise<AutoFile> {
 
   type Job = () => Promise<AutoRecord>;
   const jobFor = (id: string, cfg: MetricConfig): Job | null => {
+    // payrolls_change: FRED PAYEMS monthly change, BLS API fallback (scripts/fetch/payrolls.ts).
+    if (id === PAYROLLS_METRIC) return () => fetchPayrolls({ fred, edition: o.edition, env, http: o.http, saveRaw });
     if (cfg.automation === "AUTO" && fredIds(cfg).length) {
       return async () => {
         const c = await computeFredMetric(id, cfg, fred);

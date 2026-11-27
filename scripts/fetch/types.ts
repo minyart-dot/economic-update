@@ -26,6 +26,8 @@ export interface AutoRecord {
   /** Optional preformatted text when a single number cannot express the value (fed funds range). */
   display?: string;
   year_ago_display?: string;
+  /** Optional context sentence for the metric's notes (payrolls_change: prior 12-month average). */
+  notes?: string;
 }
 
 /** A computed value before the source URL and status flags are attached. */
