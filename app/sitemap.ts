@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { loadEditionSeed, publicEditions } from "@/lib/data";
 
+// Public pages only. /admin (owner form) is deliberately left out; it is also noindex and disallowed in robots.ts.
 export default function sitemap(): MetadataRoute.Sitemap {
   const site = (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
   const editions = publicEditions();
