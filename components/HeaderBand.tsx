@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /** Navy header band with the teal/orange stripe (spec 4.2, 4.4 #1). */
-export function HeaderBand({ editionLabel, dataAsOf }: { editionLabel: string; dataAsOf: string }) {
+export function HeaderBand({ editionLabel, dataAsOf, subscribeHref = "#subscribe-top" }: { editionLabel: string; dataAsOf: string; subscribeHref?: string }) {
   return (
     <header className="bg-navy text-white">
       <div className="mx-auto flex max-w-[1340px] flex-col gap-4 px-4 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-6 lg:py-8">
@@ -24,7 +24,7 @@ export function HeaderBand({ editionLabel, dataAsOf }: { editionLabel: string; d
             <p className="text-[12px] text-white/70">Data as of {dataAsOf}</p>
           </div>
           <a
-            href="#subscribe"
+            href={subscribeHref}
             className="no-print rounded-md bg-orange px-3 py-1.5 text-[13px] font-bold text-navy hover:bg-[#ea8d47] focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             Subscribe free

@@ -46,8 +46,16 @@ export function loadEditionSeed(id: string): EditionSeed {
   return readJson<EditionSeed>(`editions/${id}.json`);
 }
 
+/** "ready" (approved, email pending) and "published" editions are public; "draft" is not. */
+export function isPublic(id: string): boolean {
+  return loadEditionSeed(id).status !== "draft";
+}
+
+export function publicEditions(): string[] {
+  return listEditions().filter(isPublic);
+}
+
 export function latestEditionId(): string {
-  const all = listEditions();
-  const published = all.filter((id) => loadEditionSeed(id).status === "published");
-  return (published.length ? published : all).at(-1)!;
+  const pub = publicEditions();
+  return (pub.length ? pub : listEditions()).at(-1)!;
 }

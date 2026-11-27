@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { fmtR, metroPermitStats } from "@/lib/analytics";
 import { buildChartData } from "@/lib/chartData";
@@ -20,6 +21,7 @@ import { SectionHeader } from "./SectionHeader";
 import { SectionNav } from "./SectionNav";
 import { SourceLink } from "./SourceLink";
 import { StatTile } from "./StatTile";
+import { SubscribeStrip } from "./SubscribeStrip";
 
 function Section({ id, children, hideHeader = false }: { id: string; children: ReactNode; hideHeader?: boolean }) {
   const sec = loadSections().find((s) => s.id === id);
@@ -56,7 +58,7 @@ function TwoCol({ children }: { children: ReactNode }) {
   return <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">{children}</div>;
 }
 
-export function EditionPage({ ed }: { ed: Edition }) {
+export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: boolean }) {
   const m = ed.metrics;
   const s = ed.sections;
   const tx = loadTexasAnnual();
@@ -91,6 +93,15 @@ export function EditionPage({ ed }: { ed: Edition }) {
       <div className="mx-auto max-w-[1340px] lg:grid lg:grid-cols-[210px_minmax(0,1100px)] lg:gap-8 lg:px-6">
         <SectionNav items={nav} />
         <main id="main" className="min-w-0 px-4 pb-8 sm:px-6 lg:px-0">
+          {!isLatest && (
+            <p className="mt-6 rounded-md border-l-4 border-grey bg-panel px-3 py-2 text-[13px] text-dark">
+              You are reading the {ed.edition_label} edition as it was published.{" "}
+              <Link href="/" className="source-link">
+                See the latest edition
+              </Link>
+              .
+            </p>
+          )}
           {/* 1 · Summary */}
           <Section id="summary" hideHeader>
             <AlertBanner alert={ed.alert} variant="compact" />
@@ -108,6 +119,7 @@ export function EditionPage({ ed }: { ed: Edition }) {
             </div>
             <NextMonthStrip items={ed.next_month} />
             <NoteBox title="Comparisons">{ed.notes.comparisons}</NoteBox>
+            <SubscribeStrip />
           </Section>
 
           {/* 2 · Key indicators */}

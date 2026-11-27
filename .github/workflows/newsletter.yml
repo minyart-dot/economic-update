@@ -1,0 +1,90 @@
+# Sends the monthly email (spec 12.2, 13.3).
+#
+# Automatic: when a commit on main changes data/editions/ and an edition has
+# "status": "ready", this waits until that edition's page is live on SITE_URL, emails all
+# subscribers through Buttondown, then commits newsletter_sent_at back so it never sends twice.
+#
+# Manual: Actions > "Monthly newsletter" > Run workflow. Choose "dry-run" to create a
+# Buttondown draft you can preview (nothing is sent), or "send".
+#
+# Setup: repository secret BUTTONDOWN_API_KEY and repository variable SITE_URL
+# (e.g. https://your-site.vercel.app).
+
+name: Monthly newsletter
+
+on:
+  push:
+    branches: [main]
+    paths: ["data/editions/**"]
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: "Edition to email (YYYY-MM). Leave blank for the newest 'ready' edition."
+        required: false
+        default: ""
+      mode:
+        description: "dry-run creates a Buttondown draft only; send emails everyone"
+        type: choice
+        options: [dry-run, send]
+        default: dry-run
+
+permissions:
+  contents: write
+
+concurrency:
+  group: newsletter
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Check configuration
+        run: |
+          if [ -z "$BUTTONDOWN_API_KEY" ] || [ -z "$SITE_URL" ]; then
+            echo "::warning::BUTTONDOWN_API_KEY secret or SITE_URL variable is not set; skipping."
+            echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Send (automatic, after an edition is marked ready)
+        if: env.SKIP != '1' && github.event_name == 'push'
+        run: npm run newsletter -- --auto --send --wait
+
+      - name: Send or draft (manual)
+        if: env.SKIP != '1' && github.event_name == 'workflow_dispatch'
+        env:
+          EDITION: ${{ inputs.edition }}
+          MODE: ${{ inputs.mode }}
+        run: |
+          TARGET="${EDITION:---auto}"
+          npm run newsletter -- "$TARGET" "--$MODE" --wait
+
+      - name: Upload email preview
+        if: env.SKIP != '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-preview
+          path: out/newsletter-*
+          if-no-files-found: ignore
+
+      - name: Record that the email was sent
+        if: env.SKIP != '1'
+        run: |
+          if [ -n "$(git status --porcelain data/editions)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/editions
+            git commit -m "Record newsletter_sent_at [skip ci]"
+            git push
+          fi

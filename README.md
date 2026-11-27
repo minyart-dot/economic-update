@@ -8,11 +8,11 @@ The full build spec is `STATE_OF_THE_MARKET_SPEC.md` (text) and `docs/State_of_t
 
 | Phase | Scope | Status |
 |---|---|---|
-| 1 | Skeleton, design system, all 16 sections from static seed data | **Done** |
-| 2 | Charts C1–C17 (Recharts), data-table toggles | Not started (placeholders show chart ID, type and data key) |
+| 1 | Skeleton, design system, all 16 sections from static seed data | Done |
+| 2 | Charts C1–C17 (Recharts), data-table toggles | Done |
+| 4 | Email signup (top of page + footer), Buttondown, monthly email, send workflow | Done; needs the accounts below to go live |
 | 3 | Data pipeline: fetchers, `build-edition.ts`, `validate-edition.ts`, manual template | Not started |
-| 4 | Buttondown subscribe flow, newsletter | Not started (form posts to Buttondown only if `NEXT_PUBLIC_BUTTONDOWN_USERNAME` is set) |
-| 5 | GitHub Actions, archive routes, PDF, `/sources` | Not started (`/methodology` exists) |
+| 5 | Monthly data PR workflow, PDF, `/sources` | Partly: `/archive`, `/archive/YYYY-MM` and `/methodology` exist |
 | 6 | VIX alert emails, admin form, analytics, OG images | Optional |
 
 ## Run locally
@@ -61,6 +61,37 @@ Rules the code enforces (spec Section 5):
 
 Never estimate a value. If it is missing, use `null`; the page shows "—".
 
+## Going live (one-time setup, about 20 minutes)
+
+The site is public, free and needs no login. Two free accounts make it live:
+
+1. **Buttondown** (email list; free up to 100 subscribers): create a newsletter at buttondown.com, then in Settings:
+   - turn on **double opt-in** (subscribers confirm by email);
+   - set the confirmation redirect to `https://<your-site>/subscribe/confirmed`;
+   - add your mailing address (required by U.S. anti-spam law; Buttondown puts it in every email footer);
+   - copy the **API key** (Settings > API).
+2. **Vercel** (hosting): import this GitHub repository at vercel.com (Hobby plan). Add environment variables
+   `BUTTONDOWN_API_KEY` and `SITE_URL` (your Vercel address, e.g. `https://state-of-the-market.vercel.app`).
+   Vercel deploys every push to `main`.
+3. **GitHub** (automatic sending): in the repository's Settings > Secrets and variables > Actions, add secret
+   `BUTTONDOWN_API_KEY` and variable `SITE_URL`.
+4. Test: run Actions > "Monthly newsletter" > Run workflow with mode **dry-run**. It creates a draft in Buttondown
+   (nothing is sent) so you can preview it and send a test to yourself.
+
+## The monthly routine
+
+1. Around the 25th, the new month's edition file (`data/editions/YYYY-MM.json`) is prepared with `"status": "draft"`.
+   Drafts are not shown on the site. (Until Phase 3 is built, this step is done by hand.)
+2. Review it on the Vercel preview. When happy, set `"status": "ready"` and merge to `main`.
+3. That's the approval. Vercel publishes the page; the "Monthly newsletter" workflow waits until the page is live,
+   emails every subscriber once, and records `newsletter_sent_at` in the file. It refuses to send the same edition twice.
+
+Recommended send date: **the 28th of each month** (or the next weekday), mid-morning Central. By then the month's
+key releases are out (jobs, CPI, permits, builder confidence, existing-home sales), leaving a few days after the
+25th data pull for review.
+
+Preview any month's email locally: `npm run newsletter -- 2026-11 --preview` writes `out/newsletter-2026-11.html`.
+
 ## Not yet documented
 
-Setup for API keys (FRED, BLS), Buttondown and Vercel, plus the monthly owner checklist, arrive with Phases 3–5.
+Setup for the data API keys (FRED, BLS) arrives with Phase 3.
