@@ -200,6 +200,30 @@ jobs:
         continue-on-error: true
         run: npm run audit -- "${{ steps.ed.outputs.id }}" --out "out/audit-${{ steps.ed.outputs.id }}.md"
 
+      # A preview of the draft without any hosting: build the site with drafts visible
+      # (PREVIEW_DRAFTS=1, never set on the live site), render the edition to PDF, attach it to the run.
+      - name: Preview PDF of the draft
+        id: preview
+        if: steps.ed.outputs.stop != '1'
+        continue-on-error: true
+        env:
+          PREVIEW_DRAFTS: "1"
+          ID: ${{ steps.ed.outputs.id }}
+        run: |
+          npx playwright install --with-deps chromium
+          npm run build
+          npm run pdf -- "$ID" --out "out/preview-$ID.pdf"
+
+      - name: Attach the preview PDF
+        id: preview_upload
+        if: steps.ed.outputs.stop != '1' && steps.preview.outcome == 'success'
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: draft-preview-${{ steps.ed.outputs.id }}
+          path: out/preview-${{ steps.ed.outputs.id }}.pdf
+          if-no-files-found: ignore
+
       - name: Commit and push to the edition branch
         if: steps.ed.outputs.stop != '1'
         env:
@@ -226,6 +250,7 @@ jobs:
         if: steps.ed.outputs.stop != '1'
         env:
           ID: ${{ steps.ed.outputs.id }}
+          PREVIEW_URL: ${{ steps.preview_upload.outputs.artifact-url }}
         run: |
           COMMON=(--report "out/validation-$ID.md" --build-log "out/build-$ID.log" --build-status "${{ steps.build.outputs.status }}" --validate-status "${{ steps.validate.outputs.status }}")
           # Optional AI sections: the file when the step succeeded, a "no output" note when it failed

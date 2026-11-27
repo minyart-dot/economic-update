@@ -1,0 +1,33 @@
+# Render Blueprint: one web service runs the whole site (pages, email signup, /admin).
+# Set up: Render dashboard > New > Blueprint > pick this repository. Render asks for the values
+# marked `sync: false`; add the optional ones later under the service's Environment tab.
+# Every push to main deploys automatically (including the monthly PDF commit).
+services:
+  - type: web
+    name: state-of-the-market
+    runtime: node
+    # "starter" stays awake. "free" also works, but sleeps after ~15 minutes without visitors, so the
+    # first page view or signup after a quiet spell takes up to a minute while it wakes up.
+    plan: starter
+    # Dev dependencies (Tailwind, TypeScript) are needed to build, so include them explicitly.
+    buildCommand: npm ci --include=dev && npm run build
+    # `next start` listens on Render's PORT automatically.
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Public address, e.g. https://state-of-the-market.onrender.com or your own domain.
+      - key: SITE_URL
+        sync: false
+      # Buttondown > Settings > API. Needed for the email signup form.
+      - key: BUTTONDOWN_API_KEY
+        sync: false
+      # Signing key for the /admin login cookie; Render generates a random value.
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true
+      # Optional /admin form (hidden until all are set): add these in the Environment tab when wanted:
+      #   ADMIN_PASSWORD     your admin password
+      #   GITHUB_TOKEN       fine-grained token, this repository only (Contents: read/write, Pull requests: read)
+      #   GITHUB_REPOSITORY  owner/repo

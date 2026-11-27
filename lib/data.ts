@@ -90,6 +90,9 @@ export function loadEditionSeed(id: string): EditionSeed {
 
 /** "ready" (approved, email pending) and "published" editions are public; "draft" is not. */
 export function isPublic(id: string): boolean {
+  // PREVIEW_DRAFTS=1 is set only by the monthly workflow's preview build (a PDF attached to the
+  // review PR); the live site never sets it, so drafts stay hidden there.
+  if (process.env.PREVIEW_DRAFTS === "1") return true;
   return loadEditionSeed(id).status !== "draft";
 }
 

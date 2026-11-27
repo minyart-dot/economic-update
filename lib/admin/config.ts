@@ -1,5 +1,5 @@
 // Server-only settings for the /admin form. SECURITY:
-//   - Every value comes from server-side environment variables (Vercel > Settings > Environment
+//   - Every value comes from server-side environment variables (Render > your service > Environment
 //     Variables). None is NEXT_PUBLIC_, so nothing here is ever bundled for the browser.
 //   - When any of them is missing, adminConfig() returns null and every /admin page and
 //     /api/admin route answers 404, so the form is invisible until it is set up.

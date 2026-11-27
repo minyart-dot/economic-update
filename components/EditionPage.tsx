@@ -128,6 +128,11 @@ export function EditionPage({ ed, isLatest = true }: { ed: Edition; isLatest?: b
       <div className="mx-auto max-w-[1340px] lg:grid lg:grid-cols-[210px_minmax(0,1100px)] lg:gap-8 lg:px-6">
         <SectionNav items={nav} />
         <main id="main" className="min-w-0 px-4 pb-8 sm:px-6 lg:px-0">
+          {ed.status === "draft" && (
+            <p className="mt-6 rounded-md border-l-4 border-alert-amber bg-[#fdf3e3] px-3 py-2 text-[13px] font-semibold text-ink">
+              Draft preview for review. Not published; numbers and text may still change.
+            </p>
+          )}
           {!isLatest && (
             <p className="mt-6 rounded-md border-l-4 border-grey bg-panel px-3 py-2 text-[13px] text-dark">
               You are reading the {ed.edition_label} edition as it was published.{" "}

@@ -31,7 +31,7 @@ export function createRateLimiter(opts: { windowMs: number; max: number; maxKeys
   };
 }
 
-/** Client IP as Vercel reports it (first x-forwarded-for entry), or "unknown". */
+/** Client IP as the hosting proxy (Render) reports it (first x-forwarded-for entry), or "unknown". */
 export function clientIp(headers: Headers): string {
   return (headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || headers.get("x-real-ip")?.trim() || "unknown";
 }

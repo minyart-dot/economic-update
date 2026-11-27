@@ -29,7 +29,7 @@ When new data lands and a rule is met, the reader gets an email (later maybe SMS
 - A small database for accounts, alert rules and a log of sent alerts (Supabase Postgres free tier).
 - Per-person transactional email (e.g. Resend). Buttondown stays for the monthly newsletter; it is built for
   one email to everyone, not individual alerts.
-- A scheduled job (GitHub Actions or Vercel Cron) that evaluates rules after each data update, with
+- A scheduled job (GitHub Actions or a Render cron job) that evaluates rules after each data update, with
   de-duplication so a rule fires once per crossing, and a one-click "pause this alert" link in every email.
 - Privacy page and account deletion.
 

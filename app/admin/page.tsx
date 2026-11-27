@@ -89,7 +89,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <Notice title="Could not load the data from GitHub">
         <p>{(e as Error).message}</p>
         <p className="mt-2">
-          Check GITHUB_TOKEN and GITHUB_REPOSITORY in the Vercel settings, then{" "}
+          Check GITHUB_TOKEN and GITHUB_REPOSITORY in the hosting settings (Render &gt; Environment), then{" "}
           <Link href="/admin" className="source-link">
             reload
           </Link>
