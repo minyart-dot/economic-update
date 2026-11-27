@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "newsletter": "tsx scripts/send-newsletter.ts"
+    "newsletter": "tsx scripts/send-newsletter.ts",
+    "fetch": "tsx scripts/fetch/index.ts",
+    "test": "tsx --test \"tests/**/*.test.ts\""
   },
   "dependencies": {
     "js-yaml": "^5.5.0",
