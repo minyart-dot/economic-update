@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -10,7 +9,8 @@ const inter = Inter({
   display: "swap",
 });
 
-const siteUrl = (process.env.SITE_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")).replace(/\/$/, "");
+// SITE_URL is the public address; Render also provides RENDER_EXTERNAL_URL (its onrender.com address).
+const siteUrl = (process.env.SITE_URL || process.env.RENDER_EXTERNAL_URL || "http://localhost:3000").replace(/\/$/, "");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -45,9 +45,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         {children}
-        {/* Privacy-friendly page counts (no cookies). The script only exists on Vercel, so it is
-            included only in Vercel builds (Vercel sets VERCEL=1 at build time). */}
-        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );

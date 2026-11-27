@@ -16,7 +16,7 @@
 #   pdf-only  (re-)renders and commits the PDF for the chosen edition; no email
 #
 # Setup: repository secret BUTTONDOWN_API_KEY and repository variable SITE_URL
-# (e.g. https://your-site.vercel.app).
+# (e.g. https://your-site.onrender.com or your own domain).
 
 name: Monthly newsletter
 

@@ -14,7 +14,7 @@ The full build spec is `STATE_OF_THE_MARKET_SPEC.md` (text) and `docs/State_of_t
 | 4 | Email signup (top of page + footer), Buttondown, monthly email, send workflow | Done; needs the accounts below to go live |
 | — | Reader topic filter ("Choose topics", saved in the reader's browser) | Done |
 | 5 | Monthly data PR workflow, PDF, `/sources` | Done: `monthly-update.yml`, `npm run pdf`, PDF + email publish flow in `newsletter.yml`, `/sources`; the workflows have not run on GitHub yet |
-| 6 | VIX alert emails, link-preview images, analytics, AI drafting + audit | Done (optional features; each switches on with its key) |
+| 6 | VIX alert emails, link-preview images, AI drafting + audit | Done (optional features; each switches on with its key) |
 | 6 | Admin form for monthly entry (`/admin`, password-protected) | Done; tested against a GitHub stand-in |
 | — | Archive: site tabs, Editions dropdown, `/archive` with summaries; archived pages frozen as published | Done |
 | Later | Accounts and personal metric alerts | Planned, see `docs/ROADMAP.md` |
@@ -128,16 +128,20 @@ Locally, export `ANTHROPIC_API_KEY` in your shell before running the commands. *
 
 ## Going live (one-time setup, about 20 minutes)
 
-The site is public, free and needs no login. Two free accounts make it live:
+The site is public, free to read and needs no login. It runs on **Render** (which you already have); the only new account is Buttondown for email:
 
 1. **Buttondown** (email list; free up to 100 subscribers): create a newsletter at buttondown.com, then in Settings:
    - turn on **double opt-in** (subscribers confirm by email);
    - set the confirmation redirect to `https://<your-site>/subscribe/confirmed`;
    - add your mailing address (required by U.S. anti-spam law; Buttondown puts it in every email footer);
    - copy the **API key** (Settings > API).
-2. **Vercel** (hosting): import this GitHub repository at vercel.com (Hobby plan). Add environment variables
-   `BUTTONDOWN_API_KEY` and `SITE_URL` (your Vercel address, e.g. `https://state-of-the-market.vercel.app`).
-   Vercel deploys every push to `main`.
+2. **Render** (hosting): Render dashboard > **New > Blueprint** > connect GitHub and pick this repository. Render
+   reads `render.yaml` (one web service: `npm run build`, then `npm start`) and asks for `SITE_URL` and
+   `BUTTONDOWN_API_KEY`. For `SITE_URL`, use the address Render shows for the service
+   (e.g. `https://state-of-the-market.onrender.com`) or your own domain (Settings > Custom Domains); if you don't
+   know it yet, enter the onrender.com address after the first deploy and redeploy. Render deploys every push to `main`.
+   The blueprint uses the **Starter** plan so the site stays awake; **Free** also works but sleeps after ~15 minutes
+   without visitors, so the first visit or signup after a quiet spell takes up to a minute.
 3. **GitHub** (monthly PR and automatic sending):
    - Settings > Secrets and variables > Actions: add secrets `BUTTONDOWN_API_KEY` and `FRED_API_KEY`
      (free at fred.stlouisfed.org > My Account > API Keys; optional `BLS_API_KEY` from bls.gov for higher rate limits),
@@ -155,8 +159,8 @@ quietly (with a warning in the Actions log) when they don't. Never commit real v
 
 | Setting | Where | Needed for | Required? |
 |---|---|---|---|
-| `SITE_URL` | Vercel env + GitHub variable | Links in emails, sitemap, link previews | Yes, to go live |
-| `BUTTONDOWN_API_KEY` | Vercel env + GitHub secret | Email signup, monthly email, volatility alerts | Yes, for email |
+| `SITE_URL` | Render env + GitHub variable | Links in emails, sitemap, link previews | Yes, to go live |
+| `BUTTONDOWN_API_KEY` | Render env + GitHub secret | Email signup, monthly email, volatility alerts | Yes, for email |
 | `FRED_API_KEY` | GitHub secret | Monthly data fetch, volatility alerts | Yes, for automatic data |
 | `APARTMENTLIST_CSV_URL` | GitHub variable | Rent data (Apartment List renames the file monthly) | Recommended |
 | `NYFED_HHDC_URL` | GitHub variable | NY Fed household-debt workbook link, if the default quarterly name doesn't match | Optional |
@@ -165,8 +169,8 @@ quietly (with a warning in the Actions log) when they don't. Never commit real v
 | `ANTHROPIC_API_KEY` | GitHub secret | AI-drafted summary and audit in the monthly PR | Optional |
 | `ANTHROPIC_MODEL` | GitHub variable | Override the AI model | Optional |
 | `VIX_ALERT_THRESHOLD` | GitHub variable | Volatility alert level (default 30) | Optional |
-| `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | Vercel env | `/admin` form login (secret: 32+ random characters) | Optional (form hidden without them) |
-| `GITHUB_TOKEN`, `GITHUB_REPOSITORY` | Vercel env | `/admin` saves to the edition branch (fine-grained token, this repo only) | Optional (form hidden without them) |
+| `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | Render env | `/admin` form login (secret: 32+ random characters) | Optional (form hidden without them) |
+| `GITHUB_TOKEN`, `GITHUB_REPOSITORY` | Render env | `/admin` saves to the edition branch (fine-grained token, this repo only) | Optional (form hidden without them) |
 
 Also in GitHub: Settings > Actions > General > Workflow permissions > **Allow GitHub Actions to create and approve pull
 requests**.
@@ -188,9 +192,11 @@ hand and pick the month).
    comment on the PR. (The build reports a failure until every required field is updated or set to
    `carry_forward: true` with a reason; the PR is opened anyway.) Edit the text in `data/editions/YYYY-MM.json`
    for accuracy and neutrality; saving only that file re-validates without rebuilding, so your text is kept.
-4. Check the Vercel preview link on the PR (desktop and phone). A red check on the PR means validation failed.
+4. Open the **draft preview PDF** linked in the PR (the whole page with charts, marked "Draft preview"; it is rebuilt
+   on each save). If your Render plan has pull-request previews turned on, you can also use Render's preview link.
+   A red check on the PR means validation failed.
 5. When it looks right, set `"status": "ready"` in `data/editions/YYYY-MM.json` and merge. **Merging sends the email.**
-6. That's the approval. Vercel publishes the page; the "Monthly newsletter" workflow waits until the page is live,
+6. That's the approval. Render deploys the page; the "Monthly newsletter" workflow waits until the page is live,
    renders the PDF from it and commits `public/editions/YYYY-MM.pdf`, emails every subscriber once (with a link
    to the PDF), and records `newsletter_sent_at` and `"status": "published"` in the file. It refuses to send the same
    edition twice. If the PDF fails, the email still goes out without the PDF link and the run shows a warning;
@@ -219,12 +225,12 @@ refreshed PR comment), exactly like an edit in GitHub's web editor.
    - Permissions: **Contents: Read and write**, **Pull requests: Read-only** (Metadata read-only is added
      automatically). Nothing else.
    - Pick an expiry (e.g. 1 year) and put a reminder in your calendar to renew it.
-2. In Vercel > Project > Settings > Environment Variables (Production), add:
+2. In Render > your service > **Environment**, add:
    - `ADMIN_PASSWORD`: a long password only you know.
-   - `ADMIN_SESSION_SECRET`: a random string of at least 32 characters (e.g. `openssl rand -hex 32`).
+   - `ADMIN_SESSION_SECRET`: already generated by the blueprint (a random value); keep it.
    - `GITHUB_TOKEN`: the token from step 1.
    - `GITHUB_REPOSITORY`: `owner/repo` of this repository.
-3. Redeploy. Open `https://<your site>/admin` and log in.
+3. Save (Render redeploys). Open `https://<your site>/admin` and log in.
 
 Until all four variables are set, `/admin` and `/api/admin/*` answer "page not found", so the form is invisible.
 
@@ -243,7 +249,7 @@ Until all four variables are set, `/admin` and `/api/admin/*` answer "page not f
    the rebuild and validation take about 3 minutes and the validation report (also shown on `/admin`) updates.
 5. If someone else (or you, in another tab or on GitHub) saved the file in the meantime, the form refuses to
    overwrite it and asks you to reload.
-6. Then continue as usual: review the text and the Vercel preview, set `"status": "ready"`, merge.
+6. Then continue as usual: review the text and the draft preview PDF, set `"status": "ready"`, merge.
 
 ### Security
 

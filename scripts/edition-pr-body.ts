@@ -216,7 +216,9 @@ if (kind === "body") {
     "### What to do",
     `1. Open ${fileLink(manualPath, true)} and, for each unticked field below, click the source link, update the value and as-of date, and set \`stale: false\`. GitHub's web editor is fine. Each save re-runs the build and validation and updates the comment below.`,
     `2. Read the text in ${fileLink(editionPath, true)} (month in brief, big picture, bullets) and edit it for accuracy and neutrality.`,
-    "3. Check the Vercel preview (Vercel posts the link on this PR) on desktop and phone.",
+    process.env.PREVIEW_URL
+      ? `3. Download the [draft preview PDF](${process.env.PREVIEW_URL}) (the full page with charts, marked "Draft preview") and check it. If your Render plan has pull-request previews turned on, Render also posts a live preview link here.`
+      : "3. Check the draft preview PDF in this run's artifacts (Actions > this run > Artifacts), or Render's pull-request preview if your plan has it.",
     `4. When it looks right, set "status": "ready" in ${editionPath} and merge. Merging sends the email.`,
     "",
     "### Manual fields",
