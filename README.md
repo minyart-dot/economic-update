@@ -84,6 +84,39 @@ npm test
   disclaimer, the VIX definition) are listed with their reason in the report. Optional per-metric `max_age_days`
   and `typical_move` in `metrics.yaml` tune the freshness and large-move warnings.
 
+## AI drafting (optional)
+
+Two optional helpers call the Claude API. Both only produce text for you to review; nothing they write is
+published, and neither ever edits `data/editions/`.
+
+```bash
+npm run draft-summary -- 2026-12     # writes data/drafts/2026-12-summary.md
+npm run audit -- 2026-12             # writes out/audit-2026-12.md (also reads the draft, if present)
+```
+
+- **Drafter** (`scripts/draft-summary.ts`, spec Appendix E): sends the neutrality rules and a compact copy of
+  the edition (each metric's label, displayed value, period, year-ago value, direction, color, source, notes
+  and footnotes) and drafts the month in brief, big picture, four themes (Housing, Building pipeline, Jobs,
+  Household credit) with two bullets and an "Other side:" bullet each, and an email subject line. The draft is
+  then checked with the validator's draft rules (every number must exist in the edition JSON, no banned
+  words) plus the length and theme rules. If it fails, it is retried once with the problems listed; if it still
+  fails, it is saved with a **VALIDATION FAILED** header listing them. Copy any text you keep into
+  `data/editions/YYYY-MM.json` by hand.
+- **Audit** (`scripts/audit-edition.ts`, spec 14.4): a separate call that reads the edition and the draft as a
+  skeptical economist and lists findings (location, issue, suggested neutral rewrite): non-y/y comparisons,
+  mixed sources, unlabeled periods, unsupported causal or "since" claims, and tone. It only reports.
+
+In the monthly workflow both run after the build, only on the scheduled or manual run (not on your edits to
+the branch). The draft is committed to the edition branch under `data/drafts/` and both appear in the PR
+description. Either step failing never blocks the PR.
+
+**Cost:** two calls a month (three if the draft needs its retry), each with roughly 10–20K tokens of input;
+typically well under a dollar a month at current Claude API prices.
+
+**Turn it on:** add the repository secret `ANTHROPIC_API_KEY` (Settings > Secrets and variables > Actions).
+Optionally set the variable `ANTHROPIC_MODEL` to use a different Claude model (default in `scripts/lib/ai.ts`).
+Locally, export `ANTHROPIC_API_KEY` in your shell before running the commands. **Turn it off:** delete the secret; the steps are skipped.
+
 ## Going live (one-time setup, about 20 minutes)
 
 The site is public, free and needs no login. Two free accounts make it live:

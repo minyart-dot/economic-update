@@ -4,6 +4,7 @@
 //   npx tsx scripts/edition-pr-body.ts YYYY-MM --kind body|comment --out FILE
 //       [--report out/validation-YYYY-MM.md] [--build-log out/build-YYYY-MM.log]
 //       [--build-status N] [--validate-status N]
+//       [--draft data/drafts/YYYY-MM-summary.md] [--audit out/audit-YYYY-MM.md]   (body only; optional AI steps)
 //
 // The manual-field checklist is read from data/manual/YYYY-MM.yaml (written by
 // `npm run manual-template`). Its exact layout belongs to that script, so this reads it
@@ -196,6 +197,15 @@ const buildLog = buildStatus && buildStatus !== "0" && buildStatus !== "skipped"
 const manualPath = `data/manual/${id}.yaml`;
 const editionPath = `data/editions/${id}.json`;
 
+// Optional AI steps (spec 12.1 step 5, 14.4): passed only when the step ran.
+function aiSection(title: string, file: string | undefined, summary: string): string[] {
+  if (file === undefined) return [];
+  const text = readOr(file, "");
+  if (!text) return ["", `### ${title}`, `_This step ran but produced no file (see the workflow log)._`];
+  const failed = text.includes("VALIDATION FAILED");
+  return ["", `### ${title}`, `<details${failed ? "" : " open"}><summary>${summary}${failed ? " (VALIDATION FAILED: see the header)" : ""}</summary>`, "", text, "", "</details>"];
+}
+
 const parts: string[] = [];
 if (kind === "body") {
   parts.push(
@@ -214,6 +224,8 @@ if (kind === "body") {
     "",
     "### Validation report",
     report,
+    ...aiSection("AI draft summary (optional, for review)", opt("--draft"), `Drafted text from data/drafts/${id}-summary.md; copy what you keep into ${editionPath} by hand`),
+    ...aiSection("Independent AI audit (optional)", opt("--audit"), "Findings from a separate skeptical-economist review; it only reports, you decide"),
   );
 } else {
   parts.push(COMMENT_MARKER, `### Validation for ${id}`, "", statusLine(), "", report, "", "<details><summary>Manual fields</summary>", "", checklist(), "", "</details>");

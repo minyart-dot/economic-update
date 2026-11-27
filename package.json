@@ -15,9 +15,12 @@
     "build:edition": "tsx scripts/build-edition.ts",
     "validate": "tsx scripts/validate-edition.ts",
     "freeze-history": "tsx scripts/freeze-history.ts",
-    "vix-alert": "tsx scripts/vix-alert.ts"
+    "vix-alert": "tsx scripts/vix-alert.ts",
+    "draft-summary": "tsx scripts/draft-summary.ts",
+    "audit": "tsx scripts/audit-edition.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
     "@vercel/analytics": "^1.6.1",
     "js-yaml": "^5.5.0",
     "next": "15.5.29",
